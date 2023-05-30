@@ -45,10 +45,17 @@ namespace MonitorAndControl
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.ToolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.Label1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.DGMAIN = new MyContrals.ExDataGridView();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.DGMAIN = new MyContrals.ExDataGridView();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.pyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.StatusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGMAIN)).BeginInit();
             this.SuspendLayout();
             // 
@@ -115,6 +122,7 @@ namespace MonitorAndControl
             this.自动检测ToolStripMenuItem.Name = "自动检测ToolStripMenuItem";
             this.自动检测ToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
             this.自动检测ToolStripMenuItem.Text = "自动检测";
+            this.自动检测ToolStripMenuItem.Click += new System.EventHandler(this.自动检测ToolStripMenuItem_Click);
             // 
             // 开始ToolStripMenuItem
             // 
@@ -132,6 +140,8 @@ namespace MonitorAndControl
             // 
             // 添加测试项目ToolStripMenuItem
             // 
+            this.添加测试项目ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.pyToolStripMenuItem});
             this.添加测试项目ToolStripMenuItem.Name = "添加测试项目ToolStripMenuItem";
             this.添加测试项目ToolStripMenuItem.Size = new System.Drawing.Size(113, 24);
             this.添加测试项目ToolStripMenuItem.Text = "添加测试项目";
@@ -168,13 +178,36 @@ namespace MonitorAndControl
             this.Label1.Name = "Label1";
             this.Label1.Size = new System.Drawing.Size(0, 20);
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 60000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick_1);
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.DGMAIN);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.textBox1);
+            this.splitContainer1.Size = new System.Drawing.Size(1378, 692);
+            this.splitContainer1.SplitterDistance = 459;
+            this.splitContainer1.TabIndex = 18;
+            // 
             // DGMAIN
             // 
             this.DGMAIN.AllowUserToAddRows = false;
             this.DGMAIN.AllowUserToDeleteRows = false;
             this.DGMAIN.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGMAIN.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DGMAIN.Location = new System.Drawing.Point(0, 28);
+            this.DGMAIN.Location = new System.Drawing.Point(0, 0);
             this.DGMAIN.MergeColumnHeaderBackColor = System.Drawing.SystemColors.Control;
             this.DGMAIN.MergeColumnNames = ((System.Collections.Generic.List<string>)(resources.GetObject("DGMAIN.MergeColumnNames")));
             this.DGMAIN.Name = "DGMAIN";
@@ -182,19 +215,30 @@ namespace MonitorAndControl
             this.DGMAIN.RowHeadersWidth = 51;
             this.DGMAIN.RowTemplate.Height = 27;
             this.DGMAIN.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DGMAIN.Size = new System.Drawing.Size(1378, 692);
-            this.DGMAIN.TabIndex = 18;
+            this.DGMAIN.Size = new System.Drawing.Size(1378, 459);
+            this.DGMAIN.TabIndex = 19;
             // 
-            // timer1
+            // textBox1
             // 
-            this.timer1.Interval = 60000;
+            this.textBox1.Location = new System.Drawing.Point(3, 3);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(942, 223);
+            this.textBox1.TabIndex = 0;
+            // 
+            // pyToolStripMenuItem
+            // 
+            this.pyToolStripMenuItem.Name = "pyToolStripMenuItem";
+            this.pyToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.pyToolStripMenuItem.Text = "py";
+            this.pyToolStripMenuItem.Click += new System.EventHandler(this.pyToolStripMenuItem_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1378, 746);
-            this.Controls.Add(this.DGMAIN);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.menuStrip1);
             this.Name = "Main";
@@ -204,6 +248,11 @@ namespace MonitorAndControl
             this.menuStrip1.PerformLayout();
             this.StatusStrip.ResumeLayout(false);
             this.StatusStrip.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DGMAIN)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -225,8 +274,11 @@ namespace MonitorAndControl
         private System.Windows.Forms.ToolStripMenuItem 端口ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 添加测试项目ToolStripMenuItem;
-        private MyContrals.ExDataGridView DGMAIN;
         private System.Windows.Forms.ToolStripMenuItem 发送邮件ToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private MyContrals.ExDataGridView DGMAIN;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ToolStripMenuItem pyToolStripMenuItem;
     }
 }

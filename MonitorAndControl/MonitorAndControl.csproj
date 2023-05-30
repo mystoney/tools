@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.cs" />
     <Compile Include="DataTableExtend.cs" />
     <Compile Include="Emailhelp.cs" />
     <Compile Include="Form1.cs">

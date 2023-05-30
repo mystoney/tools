@@ -1,10 +1,12 @@
 ﻿using email;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -17,6 +19,8 @@ using TX.Framework.Security.Base;
 using TX.Framework.WindowUI.Controls;
 using static MonitorAndControl.Win32ServiceManager;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+
 
 namespace MonitorAndControl
 {
@@ -39,18 +43,38 @@ namespace MonitorAndControl
             ServerAdd a = new ServerAdd();
             a.ShowDialog();
         }
-
+        bool working = false;
 
         private void Main_Load(object sender, EventArgs e)
         {
+            working = false;
             timer1.Enabled = true;
-            timer1.Interval = 60000; //设置时间间隔（毫秒为单位）单位Ms
+            timer1.Interval = 3*60000; //设置时间间隔（毫秒为单位）单位Ms
             this.DGMAIN.RowsDefaultCellStyle.BackColor = Color.White;
             this.DGMAIN.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
             this.DGMAIN.RowTemplate.DefaultCellStyle.SelectionBackColor = Color.LightBlue;
             this.DGMAIN.RowTemplate.DefaultCellStyle.SelectionForeColor = Color.DarkSlateBlue;
             GetDG();
+            GetItemList();
+            Console.SetOut(new ConsoleTextWriter(textBox1));
+        }
+        public class ConsoleTextWriter : TextWriter
+        {
+            private TextBox _textBox;
+            public override Encoding Encoding => Encoding.UTF8;
 
+            public ConsoleTextWriter(TextBox textBox)
+            {
+                _textBox = textBox;
+            }
+
+            public override void Write(char value) //参数必须是char，否则不会进入
+            {
+                _textBox.Invoke(new Action(() =>
+                {
+                    _textBox.AppendText(value.ToString());
+                }));
+            }
         }
 
 
@@ -62,6 +86,35 @@ namespace MonitorAndControl
 
         }
 
+        private void GetDG(DataTable dt)
+        {         
+            DGMAIN.SetDataSource(dt);
+            if (this.DGMAIN.Columns.Count == 0)
+            {
+                this.DGMAIN.AddColumn("ServerID", "ServerID", 20, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGMAIN.AddColumn("ServerIP", "ServerIP", 100, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGMAIN.AddColumn("CheckType", "CheckType", 20, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGMAIN.AddColumn("CheckItem", "CheckItem", 100, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                //this.DGMAIN.AddColumn("Ping", "Ping", 50, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                //this.DGMAIN.AddColumn("ServiceName", "ServiceName", 100, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                //this.DGMAIN.AddColumn("Port", "Port", 50, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGMAIN.AddColumn("CheckResult", "CheckResult", 200, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGMAIN.AddColumn("Inactive", "Inactive", 20, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGMAIN.AddColumn("PriorityLevel", "PriorityLevel", 20, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGMAIN.AddColumn("TestInterval", "TestInterval", 30, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGMAIN.AddColumn("ExecutionTime", "ExecutionTime", 200, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGMAIN.AddColumn("ExecutionComputer", "ExecutionComputer", 100, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGMAIN.AddColumn("ExecutionIP", "ExecutionIP", 100, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGMAIN.AddColumn("ResultSource", "ResultSource", 100, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+
+                // 实现列的锁定功能  
+                this.DGMAIN.Columns[1].Frozen = true;
+                //禁止用户改变DataGridView1所有行的行高
+                DGMAIN.AllowUserToResizeRows = false;
+            }
+
+  
+        }
         private void GetDG()
         {
             list.Clear();
@@ -71,7 +124,6 @@ namespace MonitorAndControl
             list = wsm.GetItem();
 
             DataTable dt = DataTableExtend.ToDataTable<ServerCheckItem>(list);
-
 
 
             //DataTable dtrecord = wsm.GetRecord();
@@ -100,40 +152,7 @@ namespace MonitorAndControl
                 DGMAIN.AllowUserToResizeRows = false;
             }
 
-            string messagem = "";
-            foreach (ServerCheckItem ServerCheckItem1 in list)
-            {
 
-                if (ServerCheckItem1.CheckType == -1 && ServerCheckItem1.CheckResult != "连接")
-                {
-                    messagem = messagem + "\r\n" + "Ping " + ServerCheckItem1.ServerIP.ToString() + " 失败，结果为：" + ServerCheckItem1.CheckResult.ToString() + " " + ServerCheckItem1.ExecutionTime;
-
-                }
-                if (ServerCheckItem1.CheckType == 0 && ServerCheckItem1.CheckResult != "Running")
-                {
-                    messagem = messagem + "\r\n" + ServerCheckItem1.ServerIP.ToString() + "的服务" + ServerCheckItem1.CheckItem.ToString() + "无法检测到，结果为：" + ServerCheckItem1.CheckResult.ToString() + " " + ServerCheckItem1.ExecutionTime;
-
-                }
-                if (ServerCheckItem1.CheckType == 1 && ServerCheckItem1.CheckResult != "端口打开")
-                {
-                    messagem = messagem + "\r\n" + ServerCheckItem1.ServerIP.ToString() + "的端口" + ServerCheckItem1.CheckItem.ToString() + "关闭，结果为：" + ServerCheckItem1.CheckResult.ToString() + " " + ServerCheckItem1.ExecutionTime;
-
-                }
-
-            }
-
-
-
-
-            if (messagem != "")
-            {
-                DialogResult key = MessageBoxShow(messagem);
-                if (key == DialogResult.Yes)
-                {
-                    string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", messagem);
-                    MessageBox.Show(SendMailResult);
-                }
-            }
         }
 
         public DialogResult MessageBoxShow(string msg)
@@ -156,19 +175,20 @@ namespace MonitorAndControl
 
         private void 开始ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Action act = new Action(() =>
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    ts[i] = new System.Windows.Forms.Timer();
-                    ts[i].Tick += t_Tick;
-                    ts[i].Interval = 2000;
-                    ts[i].Enabled = true;
-                    MessageBox.Show("MsgBox" + (i + 1));
-                    Thread.Sleep(2000);
-                }
-            });
-            act.BeginInvoke(null, null);
+            timer1.Start();
+            //Action act = new Action(() =>
+            //{
+            //    for (int i = 0; i < 6; i++)
+            //    {
+            //        ts[i] = new System.Windows.Forms.Timer();
+            //        ts[i].Tick += t_Tick;
+            //        ts[i].Interval = 2000;
+            //        ts[i].Enabled = true;
+            //        MessageBox.Show("MsgBox" + (i + 1));
+            //        Thread.Sleep(2000);
+            //    }
+            //});
+            //act.BeginInvoke(null, null);
         }
 
 
@@ -269,7 +289,7 @@ namespace MonitorAndControl
 
         private void 停止ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            timer1.Stop();
         }
 
         void t_Tick(object sender, EventArgs e)
@@ -330,6 +350,149 @@ namespace MonitorAndControl
                 }
             }
         }
+
+        private void 自动检测ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void timer1_Tick_1(object sender, EventArgs e)
+        {
+            GetItemList();
+        }
+        private string GetItem(ServerCheckItem ServerCheckItem)
+        {
+            string messagem = "";
+            Win32ServiceManager wsm = new Win32ServiceManager();
+            Console.WriteLine("CurrentId:" + Task.CurrentId + "  aa;" + Thread.CurrentThread.ManagedThreadId.ToString());
+            wsm.CheckLine(ServerCheckItem);
+            if (ServerCheckItem.CheckType == -1 && ServerCheckItem.CheckResult != "连接")
+            {
+                messagem = messagem + "\r\n" + "Ping " + ServerCheckItem.ServerIP.ToString() + " 失败，结果为：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+
+            }
+            if (ServerCheckItem.CheckType == 0 && ServerCheckItem.CheckResult != "Running")
+            {
+                messagem = messagem + "\r\n" + ServerCheckItem.ServerIP.ToString() + "的服务" + ServerCheckItem.CheckItem.ToString() + "无法检测到，结果为：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+
+            }
+            if (ServerCheckItem.CheckType == 1 && ServerCheckItem.CheckResult != "端口打开")
+            {
+                messagem = messagem + "\r\n" + ServerCheckItem.ServerIP.ToString() + "的端口" + ServerCheckItem.CheckItem.ToString() + "关闭，结果为：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+            }
+
+            return messagem;
+
+
+        }
+        private void GetItemList()
+        {
+            if (working == true) { return; }
+            working = true;
+            Console.WriteLine(DateTime.Now.ToString() + "准备开始");
+            //list.Clear();
+            Win32ServiceManager wsm = new Win32ServiceManager();
+            list = wsm.GetItem();
+            List<string> messaagelist = new List<string>();
+
+            // 使用Task循环创建50个线程
+            if (list.Count > 0)
+            {
+                // 设置线程池中最大的线程数
+                ThreadPool.SetMaxThreads(6, 6);
+                
+                // 创建Task的集合
+                List<Task> taskList = new List<Task>();
+                string messagem = "";
+                for (int i = 0; i < list.Count; i++)
+                {
+                    int k = i;
+
+                    DateTime dtime = list[k].ExecutionTime.ToDateTime().AddMinutes(Convert.ToInt16(list[k].TestInterval));
+                    DateTime dtimenow = DateTime.Now;
+                    if (dtimenow < dtime)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+
+                        Task task = Task.Run(() =>
+                        {
+                            string messagem1 = GetItem(list[k]);
+                            if (messagem1 != "")
+                            {
+                                //string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", messagem);
+                                messaagelist.Add(messagem);
+                            }
+
+                            
+                        });
+                        // 把task加入到集合中
+                        taskList.Add(task);
+                    }
+
+
+
+                }
+
+                // 等待所有的线程执行完
+                //Task.WaitAll(taskList.ToArray());
+                //Task.WaitAny(taskList.ToArray());
+                try
+                {
+                    Console.WriteLine(DateTime.Now.ToString() + " 本次需要检测"+taskList.Count+"项");
+                    // Wait for all the tasks to finish.
+                    //Task.WaitAll(taskList.ToArray());
+
+                     Task.WhenAll(taskList.ToArray());
+
+
+                    // We should never get to this point
+
+                    Console.WriteLine(DateTime.Now.ToString()+ "  WaitAll() has not thrown exceptions. ");
+
+                    working = false;
+                    
+                }
+                catch (AggregateException e)
+                {
+                    Console.WriteLine(DateTime.Now.ToString() +  "\nThe following exceptions have been thrown by WaitAll(): (THIS WAS EXPECTED)");
+                    for (int j = 0; j < e.InnerExceptions.Count; j++)
+                    {
+                        Console.WriteLine("\n-------------------------------------------------\n{0}", e.InnerExceptions[j].ToString());
+                    }
+                    working = false;
+                }
+
+                //list = wsm.GetItem();
+                DataTable dt = DataTableExtend.ToDataTable<ServerCheckItem>(list);
+                string a = "";
+                for (int i = 0; i < messaagelist.Count; i++)
+                {
+                    a = messaagelist[i].ToString().Trim();
+                }
+                if (a != "")
+                {
+                    string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", a);
+                }
+
+                GetDG(dt);         
+            }
+            Console.WriteLine(DateTime.Now.ToString() + " 本次完成\n\n\n" );
+            working = false;
+        }
+
+  
+
+
+        private void pyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+
 
 
     }

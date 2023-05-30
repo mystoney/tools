@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyContrals", "MyContrals\My
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TX.Framework.WindowUI", "TX.Framework.WindowUI\TX.Framework.WindowUI.csproj", "{E8746B10-EAAF-44B7-95CC-29E4C42EC8D5}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonApplication1", "PythonApplication1\PythonApplication1.pyproj", "{B6E0BE7E-9CDC-4CB8-A91D-C85090E80332}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{E8746B10-EAAF-44B7-95CC-29E4C42EC8D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E8746B10-EAAF-44B7-95CC-29E4C42EC8D5}.Release|x86.ActiveCfg = Release|x86
 		{E8746B10-EAAF-44B7-95CC-29E4C42EC8D5}.Release|x86.Build.0 = Release|x86
+		{B6E0BE7E-9CDC-4CB8-A91D-C85090E80332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6E0BE7E-9CDC-4CB8-A91D-C85090E80332}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B6E0BE7E-9CDC-4CB8-A91D-C85090E80332}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6E0BE7E-9CDC-4CB8-A91D-C85090E80332}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -301,18 +301,20 @@ namespace MonitorAndControl
 
             p.Close();
 
-            Win32ServiceManager.ServerCheckItem a = new ServerCheckItem();
-            a.ServerIP = strIp;
-            a.CheckType = -1;
-            a.CheckItem = "Ping";
-            a.Inactive = 1;
-            a.PriorityLevel = 0;
-            a.ResultSource = 1;
-            a.CheckResult = pingrst;
-            a.ExecutionComputer = DBConn.DataAcess.SqlConn.GetMachineName();
-            a.ExecutionIP = DBConn.DataAcess.SqlConn.GetLocalIP();
-            a.ExecutionTime = DateTime.Now.ToString();
-            SaveRecord(a);
+            //Win32ServiceManager.ServerCheckItem a = new ServerCheckItem();
+            //a.ServerIP = strIp;
+            //a.CheckType = -1;
+            //a.CheckItem = "Ping";
+            //a.Inactive = 1;
+            //a.PriorityLevel = 0;
+            //a.ResultSource = 1;
+            //a.CheckResult = pingrst;
+            //a.ExecutionComputer = DBConn.DataAcess.SqlConn.GetMachineName();
+            //a.ExecutionIP = DBConn.DataAcess.SqlConn.GetLocalIP();
+            //a.ExecutionTime = DateTime.Now.ToString();
+            //SaveRecord(a);
+
+
 
             return pingrst;
 
@@ -727,16 +729,16 @@ namespace MonitorAndControl
         /// <returns></returns>
         public List<ServerCheckItem> GetItem()
         {
-            string cmd = "SELECT id as ServerID      ,ServerIP      ,CheckType      ,CheckItem      ,Inactive      ,PriorityLevel      ,TestInterval,'' as CheckResult,'' as ExecutionTime,'' as ExecutionComputer ,'' as ExecutionIP,0 as ResultSource  FROM Service_ServerList where inactive=1 order by serverip,checktype,prioritylevel";
+            string cmd = "select Service_ServerList.id as ServerID, Service_ServerList.ServerIP,Service_ServerList.CheckType,Service_ServerList.CheckItem,Inactive,PriorityLevel,TestInterval,CheckResult,case  when ExecutionTime is NULL then  '2023-01-01 00:00:00.000' else ExecutionTime end as ExecutionTime,ExecutionComputer ,ExecutionIP,ResultSource  \r\nfrom Service_ServerList left join  (select * from(SELECT ROW_NUMBER() over(partition by serverlistid order by id desc) as rowNum ,[ServerListID],[ServerIP],[CheckType],[CheckItem],[CheckResult],[ExecutionTime],[ExecutionComputer],[ExecutionIP],[ResultSource] FROM Service_Record) temp\r\nwhere temp.rowNum = 1) a on Service_ServerList.id = a.ServerListID where inactive=1 order by serverip,checktype,prioritylevel";
             DataTable dt= DBConn.DataAcess.SqlConn.Query(cmd).Tables[0];
             List<ServerCheckItem> serverCheckItems = new List<ServerCheckItem>();
             if (dt.Rows.Count> 0)
             {   
                 serverCheckItems = dt.ToDataList<ServerCheckItem>();
-                for (int i = 0; i < serverCheckItems.Count; i++)
-                {
-                    serverCheckItems[i] = CheckLine(serverCheckItems[i]);
-                }
+                //for (int i = 0; i < serverCheckItems.Count-1; i++)
+                //{
+                //    serverCheckItems[i] = CheckLine(serverCheckItems[i]);
+                //}
             }
             return serverCheckItems;
         }
