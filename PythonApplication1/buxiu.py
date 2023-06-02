@@ -19,6 +19,7 @@ class anhei:
             if self.highComb[i][1][0] > nmax:
                 nmax =  self.highComb[i][1][0]
                 imax = i
+                
         print("名,坚韧,耐力,精神,力量,智力")
         print(self.highComb[imax])
 

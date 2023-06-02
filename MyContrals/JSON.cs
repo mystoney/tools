@@ -13,7 +13,7 @@ namespace MyContrals
 {
     public class JSON
     {
-        public string GetRequestTest(string url)
+        public static string GetRequestTest(string url)
         {
             HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
 
@@ -153,9 +153,10 @@ namespace MyContrals
             DataTable result;
             try
             {
+                string json1 = "{\"code\":\"200\",\"updateTime\":\"2023-06-01T14:07+08:00\",\"fxLink\":\"https://www.qweather.com/weather/qingyang-101270117.html\",\"now\":{\"obsTime\":\"2023-06-01T13:57+08:00\",\"temp\":\"28\",\"feelsLike\":\"25\",\"icon\":\"101\",\"text\":\"多云\",\"wind360\":\"21\",\"windDir\":\"东北风\",\"windScale\":\"3\",\"windSpeed\":\"17\",\"humidity\":\"42\",\"precip\":\"0.0\",\"pressure\":\"949\",\"vis\":\"16\",\"cloud\":\"91\",\"dew\":\"15\"},\"refer\":{\"sources\":[\"QWeather\",\"NMC\",\"ECMWF\"],\"license\":[\"CC BY-SA 4.0\"]}}";
                 JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
                 javaScriptSerializer.MaxJsonLength = Int32.MaxValue; //取得最大数值
-                ArrayList arrayList = javaScriptSerializer.Deserialize<ArrayList>(json);
+                ArrayList arrayList = javaScriptSerializer.Deserialize<ArrayList>(json1);
                 if (arrayList.Count > 0)
                 {
                     foreach (Dictionary<string, object> dictionary in arrayList)

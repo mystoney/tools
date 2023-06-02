@@ -1,4 +1,5 @@
 ﻿using email;
+using MyContrals;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
@@ -22,6 +24,8 @@ using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 
+
+
 namespace MonitorAndControl
 {
     public partial class Main : Form
@@ -29,6 +33,12 @@ namespace MonitorAndControl
         List<ServerCheckItem> list = new List<ServerCheckItem>();
 
         private TProcess m_process;
+
+        
+        /// <summary>
+        /// 连续5次(1/4小时)没有报错就发送一个笑话
+        /// </summary>
+        int NoErr = 1;
 
 
         public Main()
@@ -385,7 +395,7 @@ namespace MonitorAndControl
 
 
         }
-        private void GetItemList()
+        private async void  GetItemList()
         {
             if (working == true) { return; }
             working = true;
@@ -399,15 +409,13 @@ namespace MonitorAndControl
             if (list.Count > 0)
             {
                 // 设置线程池中最大的线程数
-                ThreadPool.SetMaxThreads(6, 6);
-                
+                ThreadPool.SetMaxThreads(6, 6);                
                 // 创建Task的集合
                 List<Task> taskList = new List<Task>();
-                string messagem = "";
+                
                 for (int i = 0; i < list.Count; i++)
                 {
                     int k = i;
-
                     DateTime dtime = list[k].ExecutionTime.ToDateTime().AddMinutes(Convert.ToInt16(list[k].TestInterval));
                     DateTime dtimenow = DateTime.Now;
                     if (dtimenow < dtime)
@@ -416,83 +424,256 @@ namespace MonitorAndControl
                     }
                     else
                     {
-
                         Task task = Task.Run(() =>
                         {
                             string messagem1 = GetItem(list[k]);
                             if (messagem1 != "")
                             {
                                 //string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", messagem);
-                                messaagelist.Add(messagem);
-                            }
-
-                            
+                                messaagelist.Add(messagem1);
+                            }                            
                         });
                         // 把task加入到集合中
                         taskList.Add(task);
                     }
-
-
-
                 }
 
-                // 等待所有的线程执行完
-                //Task.WaitAll(taskList.ToArray());
-                //Task.WaitAny(taskList.ToArray());
+
                 try
                 {
+                    
                     Console.WriteLine(DateTime.Now.ToString() + " 本次需要检测"+taskList.Count+"项");
                     // Wait for all the tasks to finish.
-                    //Task.WaitAll(taskList.ToArray());
-
-                     Task.WhenAll(taskList.ToArray());
-
+                    await Task.WhenAll(taskList.ToArray());                    
 
                     // We should never get to this point
 
-                    Console.WriteLine(DateTime.Now.ToString()+ "  WaitAll() has not thrown exceptions. ");
+                    Console.WriteLine(DateTime.Now.ToString()+ "  WhenAll() has not thrown exceptions.");
 
                     working = false;
                     
                 }
                 catch (AggregateException e)
                 {
-                    Console.WriteLine(DateTime.Now.ToString() +  "\nThe following exceptions have been thrown by WaitAll(): (THIS WAS EXPECTED)");
+                    Console.WriteLine(DateTime.Now.ToString() + "\nThe following exceptions have been thrown by WhenAll(): (THIS WAS EXPECTED)");
                     for (int j = 0; j < e.InnerExceptions.Count; j++)
                     {
                         Console.WriteLine("\n-------------------------------------------------\n{0}", e.InnerExceptions[j].ToString());
                     }
                     working = false;
                 }
-
-                //list = wsm.GetItem();
                 DataTable dt = DataTableExtend.ToDataTable<ServerCheckItem>(list);
                 string a = "";
                 for (int i = 0; i < messaagelist.Count; i++)
                 {
                     a = messaagelist[i].ToString().Trim();
+
                 }
                 if (a != "")
                 {
+                    NoErr = 1;
                     string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", a);
+                    Console.WriteLine(DateTime.Now.ToString() + " 发现异常 已发送邮件" + a);
+                    Console.Write("\r\n\r\n");
+                    Console.Write(new WeCom().SendToWeCom(
+                                        a,
+                                        "wwed1606c46cbfc117"
+                                        , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
+                                        "1000002", "3"
+                                        ));                    
                 }
+                else
+                {                    
+                    if (NoErr % 2 == 0 )
+                    {
+                        string RandomWords=wsm.GetRandomWords();
+                        Console.Write("\r\n\r\n");
+                        Console.Write(new WeCom().SendToWeCom(
+                                            RandomWords,
+                                            "wwed1606c46cbfc117"
+                                            , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
+                                            "1000002","2"
+                                            ));
 
+                    }
+                    Console.WriteLine(DateTime.Now.ToString() + " 无异常 未发送电子邮件");
+                   
+                    NoErr = NoErr + 1;
+                }
                 GetDG(dt);         
             }
-            Console.WriteLine(DateTime.Now.ToString() + " 本次完成\n\n\n" );
+            Console.WriteLine(DateTime.Now.ToString() + " 本次完成\r\n\r\n");
             working = false;
         }
 
-  
-
-
-        private void pyToolStripMenuItem_Click(object sender, EventArgs e)
+        
+        /// <summary>
+        /// 测试-发天气预报
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
+            //Console.Write("\r\n\r\n");
+            //Console.Write(new WeCom().SendToWeCom(
+            //                    "msginfo",
+            //                    "wwed1606c46cbfc117"
+            //                    , "6DdwqL47r1J33_yOE5uM2hvBtAQcOxgiWAnkc7VDEVI",
+            //                    "1000003"
+            //                    )  );
+            //Console.Write("\r\n\r\n");
+
+            string a = "https://devapi.qweather.com/v7/weather/now?location=101010100&key=eb52e34d9cbb4dd5a7c1e07f4b731902";
+
+            string 青羊区 = "https://devapi.qweather.com/v7/weather/now?location=101270117&key=eb52e34d9cbb4dd5a7c1e07f4b731902";
+
+            string a1 = HttpUitls.Get(青羊区);
+            
+
+            JSON js = new JSON();
+            DataTable dt = js.ToDataTableOne(a1);
+
+
+            Console.Write("\r\n\r\n");
+
+            PythonProgram pp = new PythonProgram();
+            //pp.
+
+                //
+            //Console.Write(s);
+            //code API状态码，具体含义请参考状态码
+            //updateTime 当前API的最近更新时间
+            //fxLink 当前数据的响应式页面，便于嵌入网站或应用
+            //now.obsTime 数据观测时间
+            //now.temp 温度，默认单位：摄氏度
+            //now.feelsLike 体感温度，默认单位：摄氏度
+            //now.icon 天气状况和图标的代码，图标可通过天气状况和图标下载
+            //now.text 天气状况的文字描述，包括阴晴雨雪等天气状态的描述
+            //now.wind360 风向360角度
+            //now.windDir 风向
+            //now.windScale 风力等级
+            //now.windSpeed 风速，公里 / 小时
+            //now.humidity 相对湿度，百分比数值
+            //now.precip 当前小时累计降水量，默认单位：毫米
+            //now.pressure 大气压强，默认单位：百帕
+            //now.vis 能见度，默认单位：公里
+            //now.cloud 云量，百分比数值。可能为空
+            //now.dew 露点温度。可能为空
+            //refer.sources 原始数据来源，或数据源说明，可能为空
+            //refer.license 数据许可或版权声明，可能为空
+
+
+
+        }
+        public class HttpUitls
+        {
+            public static string Get(string Url)
+            {
+                //System.GC.Collect();
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
+                request.Proxy = null;
+                request.KeepAlive = false;
+                request.Method = "GET";
+                request.ContentType = "application/json; charset=UTF-8";
+                request.AutomaticDecompression = DecompressionMethods.GZip;
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream myResponseStream = response.GetResponseStream();
+                StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.UTF8);
+                string retString = myStreamReader.ReadToEnd();
+
+                myStreamReader.Close();
+                myResponseStream.Close();
+
+                if (response != null)
+                {
+                    response.Close();
+                }
+                if (request != null)
+                {
+                    request.Abort();
+                }
+
+                return retString;
+            }
+
+            public static string Post(string Url, string Data, string Referer)
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
+                request.Method = "POST";
+                request.Referer = Referer;
+                byte[] bytes = Encoding.UTF8.GetBytes(Data);
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = bytes.Length;
+                Stream myResponseStream = request.GetRequestStream();
+                myResponseStream.Write(bytes, 0, bytes.Length);
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader myStreamReader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+                string retString = myStreamReader.ReadToEnd();
+
+                myStreamReader.Close();
+                myResponseStream.Close();
+
+                if (response != null)
+                {
+                    response.Close();
+                }
+                if (request != null)
+                {
+                    request.Abort();
+                }
+                return retString;
+            }
 
         }
 
 
+        public class Studet
+        {   //code API状态码，具体含义请参考状态码
+            //updateTime 当前API的最近更新时间
+            //fxLink 当前数据的响应式页面，便于嵌入网站或应用
+            //now.obsTime 数据观测时间
+            //now.temp 温度，默认单位：摄氏度
+            //now.feelsLike 体感温度，默认单位：摄氏度
+            //now.icon 天气状况和图标的代码，图标可通过天气状况和图标下载
+            //now.text 天气状况的文字描述，包括阴晴雨雪等天气状态的描述
+            //now.wind360 风向360角度
+            //now.windDir 风向
+            //now.windScale 风力等级
+            //now.windSpeed 风速，公里 / 小时
+            //now.humidity 相对湿度，百分比数值
+            //now.precip 当前小时累计降水量，默认单位：毫米
+            //now.pressure 大气压强，默认单位：百帕
+            //now.vis 能见度，默认单位：公里
+            //now.cloud 云量，百分比数值。可能为空
+            //now.dew 露点温度。可能为空
+            //refer.sources 原始数据来源，或数据源说明，可能为空
+            //refer.license 数据许可或版权声明，可能为空
+            //public string code { get; set; }
+            //public int updateTime { get; set; }
+            //public string fxLink { get; set; }
+            //public DateTime now.obsTime { get; set; }
+            //public string code { get; set; }
+            //public int updateTime { get; set; }
+            //public string fxLink { get; set; }
+            //public DateTime now.obsTime { get; set; }
+            //public string code { get; set; }
+            //public int updateTime { get; set; }
+            //public string fxLink { get; set; }
+            //public DateTime now.obsTime { get; set; }
+            //public string code { get; set; }
+            //public int updateTime { get; set; }
+            //public string fxLink { get; set; }
+            //public DateTime now.obsTime { get; set; }
 
+
+        }
+
+        private void 不朽ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           // PythonApplication1 p = new PythonApplication1();
+        }
 
 
     }

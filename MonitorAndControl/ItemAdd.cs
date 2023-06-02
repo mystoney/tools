@@ -122,16 +122,15 @@ namespace MonitorAndControl
             a.CheckItem = "Ping";
             a.Inactive = 1;
             a.PriorityLevel = 0;
-
-
-            foreach (ServerCheckItem aaaa in CheckItemNow)
-            {
-                if (aaaa.ServerIP == a.ServerIP && aaaa.CheckType == a.CheckType && aaaa.CheckItem == a.CheckItem)
-                {
-                    MessageBox.Show("重复项目");
-                    return;
-                }
-            }
+            a.TestInterval = 5;
+            //foreach (ServerCheckItem aaaa in CheckItemNow)
+            //{
+            //    if (aaaa.ServerIP == a.ServerIP && aaaa.CheckType == a.CheckType && aaaa.CheckItem == a.CheckItem)
+            //    {
+            //        MessageBox.Show("重复项目");
+            //        return;
+            //    }
+            //}
             foreach (ServerCheckItem aaaa in CheckItemAdd)
             {
                 if (aaaa.ServerIP == a.ServerIP && aaaa.CheckType == a.CheckType && aaaa.CheckItem == a.CheckItem)
@@ -187,6 +186,7 @@ namespace MonitorAndControl
                 this.DGADD.AddColumn("CheckItem", "CheckItem", 50, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
                 this.DGADD.AddColumn("Inactive", "Inactive", 20, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
                 this.DGADD.AddColumn("PriorityLevel", "PriorityLevel", 20, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
+                this.DGADD.AddColumn("TestInterval", "TestInterval", 20, true, null, DataGridViewContentAlignment.MiddleLeft, null, true);
                 // 实现列的锁定功能  
                 this.DGADD.Columns[1].Frozen = true;
                 //禁止用户改变DataGridView1所有行的行高
@@ -226,6 +226,7 @@ namespace MonitorAndControl
                 a.CheckItem = tb_AddPort.Text.Trim();
                 a.Inactive = 1;
                 a.PriorityLevel = 0;
+                a.TestInterval = 10;
                 foreach (ServerCheckItem aaaa in CheckItemNow)
                 {
                     if (aaaa.ServerIP == a.ServerIP && aaaa.CheckType == a.CheckType && aaaa.CheckItem == a.CheckItem)
@@ -298,7 +299,7 @@ namespace MonitorAndControl
             a.CheckItem = ServiceName;
             a.Inactive = 1;
             a.PriorityLevel = 0;
-
+            a.TestInterval = 10;
 
 
             string s = wm.CmdPing(ServerIP,1);

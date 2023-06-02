@@ -87,6 +87,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="PythonProgram.cs" />
     <Compile Include="SqlHelper.cs" />
     <Compile Include="ToExcel.cs" />
     <Compile Include="TvUser.cs">

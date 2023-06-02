@@ -840,6 +840,22 @@ namespace MonitorAndControl
 
         #endregion
 
+        /// <summary>
+        /// 从RandomWords表里随机获取一行文字
+        /// </summary>
+        /// <returns></returns>
+        public string GetRandomWords()
+        {
+            string cmd = "SELECT TOP 1 Words FROM RandomWords ORDER BY NEWID()";
+            DataTable dt= DBConn.DataAcess.SqlConn.Query(cmd.ToString()).Tables[0];
+            if (dt.Rows.Count == 0){
+                return "没毛病";
+            }else{
+                return dt.Rows[0]["words"].ToString();
+            }
+        }
+
+         
 
         public class ServerCheckItem
         {

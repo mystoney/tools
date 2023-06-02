@@ -32,7 +32,6 @@ namespace MonitorAndControl
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.新增ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.手动检测ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.服务ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.端口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,15 +40,18 @@ namespace MonitorAndControl
             this.开始ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.停止ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.添加测试项目ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.发送邮件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.测试ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.ToolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.Label1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.DGMAIN = new MyContrals.ExDataGridView();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.pyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.新增ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.发送邮件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DGMAIN = new MyContrals.ExDataGridView();
+            this.不朽ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -64,23 +66,15 @@ namespace MonitorAndControl
             this.menuStrip1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.新增ToolStripMenuItem,
             this.手动检测ToolStripMenuItem,
             this.自动检测ToolStripMenuItem,
             this.添加测试项目ToolStripMenuItem,
-            this.发送邮件ToolStripMenuItem});
+            this.测试ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1378, 28);
             this.menuStrip1.TabIndex = 16;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // 新增ToolStripMenuItem
-            // 
-            this.新增ToolStripMenuItem.Name = "新增ToolStripMenuItem";
-            this.新增ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
-            this.新增ToolStripMenuItem.Text = "新增";
-            this.新增ToolStripMenuItem.Click += new System.EventHandler(this.新增ToolStripMenuItem_Click);
             // 
             // 手动检测ToolStripMenuItem
             // 
@@ -140,19 +134,28 @@ namespace MonitorAndControl
             // 
             // 添加测试项目ToolStripMenuItem
             // 
-            this.添加测试项目ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pyToolStripMenuItem});
             this.添加测试项目ToolStripMenuItem.Name = "添加测试项目ToolStripMenuItem";
             this.添加测试项目ToolStripMenuItem.Size = new System.Drawing.Size(113, 24);
             this.添加测试项目ToolStripMenuItem.Text = "添加测试项目";
             this.添加测试项目ToolStripMenuItem.Click += new System.EventHandler(this.添加测试项目ToolStripMenuItem_Click);
             // 
-            // 发送邮件ToolStripMenuItem
+            // 测试ToolStripMenuItem
             // 
-            this.发送邮件ToolStripMenuItem.Name = "发送邮件ToolStripMenuItem";
-            this.发送邮件ToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
-            this.发送邮件ToolStripMenuItem.Text = "发送邮件";
-            this.发送邮件ToolStripMenuItem.Click += new System.EventHandler(this.发送邮件ToolStripMenuItem_Click);
+            this.测试ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
+            this.发送邮件ToolStripMenuItem,
+            this.新增ToolStripMenuItem,
+            this.不朽ToolStripMenuItem});
+            this.测试ToolStripMenuItem.Name = "测试ToolStripMenuItem";
+            this.测试ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.测试ToolStripMenuItem.Text = "测试";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(224, 26);
+            this.toolStripMenuItem2.Text = "发微信";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // StatusStrip
             // 
@@ -201,6 +204,29 @@ namespace MonitorAndControl
             this.splitContainer1.SplitterDistance = 459;
             this.splitContainer1.TabIndex = 18;
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(3, 3);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(942, 223);
+            this.textBox1.TabIndex = 0;
+            // 
+            // 新增ToolStripMenuItem
+            // 
+            this.新增ToolStripMenuItem.Name = "新增ToolStripMenuItem";
+            this.新增ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.新增ToolStripMenuItem.Text = "新增服务";
+            this.新增ToolStripMenuItem.Click += new System.EventHandler(this.新增ToolStripMenuItem_Click);
+            // 
+            // 发送邮件ToolStripMenuItem
+            // 
+            this.发送邮件ToolStripMenuItem.Name = "发送邮件ToolStripMenuItem";
+            this.发送邮件ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.发送邮件ToolStripMenuItem.Text = "发送邮件";
+            this.发送邮件ToolStripMenuItem.Click += new System.EventHandler(this.发送邮件ToolStripMenuItem_Click);
+            // 
             // DGMAIN
             // 
             this.DGMAIN.AllowUserToAddRows = false;
@@ -218,20 +244,12 @@ namespace MonitorAndControl
             this.DGMAIN.Size = new System.Drawing.Size(1378, 459);
             this.DGMAIN.TabIndex = 19;
             // 
-            // textBox1
+            // 不朽ToolStripMenuItem
             // 
-            this.textBox1.Location = new System.Drawing.Point(3, 3);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(942, 223);
-            this.textBox1.TabIndex = 0;
-            // 
-            // pyToolStripMenuItem
-            // 
-            this.pyToolStripMenuItem.Name = "pyToolStripMenuItem";
-            this.pyToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.pyToolStripMenuItem.Text = "py";
-            this.pyToolStripMenuItem.Click += new System.EventHandler(this.pyToolStripMenuItem_Click);
+            this.不朽ToolStripMenuItem.Name = "不朽ToolStripMenuItem";
+            this.不朽ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.不朽ToolStripMenuItem.Text = "不朽";
+            this.不朽ToolStripMenuItem.Click += new System.EventHandler(this.不朽ToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -262,7 +280,6 @@ namespace MonitorAndControl
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem 新增ToolStripMenuItem;
         internal System.Windows.Forms.StatusStrip StatusStrip;
         internal System.Windows.Forms.ToolStripStatusLabel ToolStripStatusLabel2;
         public System.Windows.Forms.ToolStripStatusLabel Label1;
@@ -274,11 +291,14 @@ namespace MonitorAndControl
         private System.Windows.Forms.ToolStripMenuItem 端口ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 添加测试项目ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 发送邮件ToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private MyContrals.ExDataGridView DGMAIN;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.ToolStripMenuItem pyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 测试ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem 新增ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 发送邮件ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 不朽ToolStripMenuItem;
     }
 }
