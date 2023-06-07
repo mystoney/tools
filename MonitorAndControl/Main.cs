@@ -47,7 +47,7 @@ namespace MonitorAndControl
         {
             working = false;
             timer1.Enabled = true;
-            timer1.Interval = 1*60000; //设置时间间隔（毫秒为单位）单位Ms
+            timer1.Interval = 5*60000; //设置时间间隔（毫秒为单位）单位Ms
             this.DGMAIN.RowsDefaultCellStyle.BackColor = Color.White;
             this.DGMAIN.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
             this.DGMAIN.RowTemplate.DefaultCellStyle.SelectionBackColor = Color.LightBlue;
@@ -427,7 +427,7 @@ namespace MonitorAndControl
                 }
                 DataTable dt = DataTableExtend.ToDataTable<ServerCheckItem>(list);
                 string a = "";
-                string a1 = "";
+
                 for (int i = 0; i < messaagelist.Count; i++)
                 {
                     if (a == null) { a = messaagelist[i].ToString().Trim() + "\r\n"; }
@@ -443,14 +443,29 @@ namespace MonitorAndControl
                         NoErr = 1;
                         string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", a);
                         //Console.WriteLine(DateTime.Now.ToString() + " 发现异常 已发送邮件\r\n" + a);  
-                        Console.WriteLine(a);
-                        new WeCom().SendToWeCom(
-                                            a,
-                                            "wwed1606c46cbfc117"
-                                            , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
-                                            "1000002", "3"
-                                            );
-                        Console.Write("\r\n");
+                        if (str6oclock != "")
+                        {
+                            Console.WriteLine(a);
+                            new WeCom().SendToWeCom(
+                                                str6oclock + "\r\n" + a,
+                                                "wwed1606c46cbfc117"
+                                                , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
+                                                "1000002", "3"
+                                                );
+                            Console.Write("\r\n");
+                            str6oclock = "";
+                        }
+                        else
+                        {
+                            Console.WriteLine(a);
+                            new WeCom().SendToWeCom(
+                                                a,
+                                                "wwed1606c46cbfc117"
+                                                , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
+                                                "1000002", "3"
+                                                );
+                            Console.Write("\r\n");
+                        }  
                     }
                     else
                     {
@@ -479,7 +494,7 @@ namespace MonitorAndControl
                 {
                     if (a != "")
                     {
-                       
+                        str6oclock = str6oclock+ a;
                     }
                 }
                 GetDG(dt);
