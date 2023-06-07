@@ -427,49 +427,60 @@ namespace MonitorAndControl
                 }
                 DataTable dt = DataTableExtend.ToDataTable<ServerCheckItem>(list);
                 string a = "";
+                string a1 = "";
                 for (int i = 0; i < messaagelist.Count; i++)
                 {
                     if (a == null) { a = messaagelist[i].ToString().Trim() + "\r\n"; }
                     else { a = a + messaagelist[i].ToString().Trim() + "\r\n"; }
                 }
-                //DateTime now = DateTime.Now;//当前时间
-                //DateTime BeginOClock = DateTime.Today.AddHours(22.0); //22:00:00
-                //DateTime EndOClock = BeginOClock.AddDays(0.33);//增加半小时
-                if (a != "")
+                DateTime now = DateTime.Now;//当前时间
+                DateTime BeginOClock = DateTime.Today.AddHours(6.0); //6:00:00
+                DateTime EndOClock = DateTime.Today.AddHours(22.0); //22:00:00
+                if (now > BeginOClock && now < EndOClock)
                 {
-                    NoErr = 1;
-                    string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", a);
-                    //Console.WriteLine(DateTime.Now.ToString() + " 发现异常 已发送邮件\r\n" + a);  
-                    Console.WriteLine(a);
-                    new WeCom().SendToWeCom(
-                                        a,
-                                        "wwed1606c46cbfc117"
-                                        , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
-                                        "1000002", "3"
-                                        );
-                    Console.Write("\r\n");
+                    if (a != "")
+                    {
+                        NoErr = 1;
+                        string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", a);
+                        //Console.WriteLine(DateTime.Now.ToString() + " 发现异常 已发送邮件\r\n" + a);  
+                        Console.WriteLine(a);
+                        new WeCom().SendToWeCom(
+                                            a,
+                                            "wwed1606c46cbfc117"
+                                            , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
+                                            "1000002", "3"
+                                            );
+                        Console.Write("\r\n");
+                    }
+                    else
+                    {
+                        if (NoErr % 12 == 0)
+                        {
+                            string RandomWords = wsm.GetRandomWords();
+                            new WeCom().SendToWeCom(
+                                                RandomWords,
+                                                "wwed1606c46cbfc117"
+                                                , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
+                                                "1000002", "2"
+                                                );
+                            Console.Write("\r\n");
+                            //Console.Write(new WeCom().SendToWeCom(
+                            //                    RandomWords,
+                            //                    "wwed1606c46cbfc117"
+                            //                    , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
+                            //                    "1000002", "3"
+                            //                    ));
+                        }
+                        //Console.WriteLine(DateTime.Now.ToString() + " 无异常 未发送电子邮件\r\n");                   
+                        NoErr = NoErr + 1;
+                    }
                 }
                 else
                 {
-                    if (NoErr % 12 == 0)
+                    if (a != "")
                     {
-                        string RandomWords = wsm.GetRandomWords();
-                        new WeCom().SendToWeCom(
-                                            RandomWords,
-                                            "wwed1606c46cbfc117"
-                                            , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
-                                            "1000002", "2"
-                                            );
-                        Console.Write("\r\n");
-                        //Console.Write(new WeCom().SendToWeCom(
-                        //                    RandomWords,
-                        //                    "wwed1606c46cbfc117"
-                        //                    , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
-                        //                    "1000002", "3"
-                        //                    ));
+                       
                     }
-                    //Console.WriteLine(DateTime.Now.ToString() + " 无异常 未发送电子邮件\r\n");                   
-                    NoErr = NoErr + 1;
                 }
                 GetDG(dt);
             }   
