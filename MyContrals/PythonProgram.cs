@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace MonitorAndControl
 {
-    class PythonProgram
+   public class PythonProgram
     {
-        static void PythonProgramMain(string[] args)
+        static void Main(string[] args)
         {
             string filename = @"C:/Users/Stoney/AppData/Local/Programs/Python/Python36-32/python.exe";  // python解释器
             // pyhon模块 arg1 arg2

@@ -1,30 +1,18 @@
 ﻿using email;
-using MyContrals;
+using Microsoft.Win32.TaskScheduler;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Mail;
-using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using TX.Framework.Security.Base;
-using TX.Framework.WindowUI.Controls;
 using static MonitorAndControl.Win32ServiceManager;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
-
-
-
+using Action = System.Action;
 
 namespace MonitorAndControl
 {
@@ -39,7 +27,7 @@ namespace MonitorAndControl
         /// 连续5次(1/4小时)没有报错就发送一个笑话
         /// </summary>
         int NoErr = 1;
-
+        string str6oclock = "";
 
         public Main()
         {
@@ -59,7 +47,7 @@ namespace MonitorAndControl
         {
             working = false;
             timer1.Enabled = true;
-            timer1.Interval = 3*60000; //设置时间间隔（毫秒为单位）单位Ms
+            timer1.Interval = 1*60000; //设置时间间隔（毫秒为单位）单位Ms
             this.DGMAIN.RowsDefaultCellStyle.BackColor = Color.White;
             this.DGMAIN.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
             this.DGMAIN.RowTemplate.DefaultCellStyle.SelectionBackColor = Color.LightBlue;
@@ -67,7 +55,9 @@ namespace MonitorAndControl
             GetDG();
             GetItemList();
             Console.SetOut(new ConsoleTextWriter(textBox1));
+            setTaskAtFixedTime();
         }
+
         public class ConsoleTextWriter : TextWriter
         {
             private TextBox _textBox;
@@ -88,13 +78,6 @@ namespace MonitorAndControl
         }
 
 
-        private void GetTreeListView()
-        {
-
-
-
-
-        }
 
         private void GetDG(DataTable dt)
         {         
@@ -186,19 +169,6 @@ namespace MonitorAndControl
         private void 开始ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             timer1.Start();
-            //Action act = new Action(() =>
-            //{
-            //    for (int i = 0; i < 6; i++)
-            //    {
-            //        ts[i] = new System.Windows.Forms.Timer();
-            //        ts[i].Tick += t_Tick;
-            //        ts[i].Interval = 2000;
-            //        ts[i].Enabled = true;
-            //        MessageBox.Show("MsgBox" + (i + 1));
-            //        Thread.Sleep(2000);
-            //    }
-            //});
-            //act.BeginInvoke(null, null);
         }
 
 
@@ -334,14 +304,14 @@ namespace MonitorAndControl
 
 
                 DialogResult result = DialogResult.None;
-                Task.Run(() =>
+                System.Threading.Tasks.Task.Run(() =>
                 {
                     if (MessageBoxShowHandler != null)
                     {
                         result = /*MessageBoxShowHandler(msg)*/MessageBox.Show(msg, "Task 内部测试", MessageBoxButtons.YesNo);
                     }
                 });
-                Task.Run(() =>
+                System.Threading.Tasks.Task.Run(() =>
                 {
                     if (MessageBoxShowHandler != null)
                     {
@@ -374,7 +344,7 @@ namespace MonitorAndControl
         {
             string messagem = "";
             Win32ServiceManager wsm = new Win32ServiceManager();
-            Console.WriteLine("CurrentId:" + Task.CurrentId + "  aa;" + Thread.CurrentThread.ManagedThreadId.ToString());
+            //Console.WriteLine("CurrentId:" + System.Threading.Tasks.Task.CurrentId + "  aa;" + Thread.CurrentThread.ManagedThreadId.ToString());
             wsm.CheckLine(ServerCheckItem);
             if (ServerCheckItem.CheckType == -1 && ServerCheckItem.CheckResult != "连接")
             {
@@ -399,20 +369,20 @@ namespace MonitorAndControl
         {
             if (working == true) { return; }
             working = true;
-            Console.WriteLine(DateTime.Now.ToString() + "准备开始");
+
             //list.Clear();
             Win32ServiceManager wsm = new Win32ServiceManager();
-            list = wsm.GetItem();
+            list = wsm.GetItem();            
             List<string> messaagelist = new List<string>();
 
             // 使用Task循环创建50个线程
             if (list.Count > 0)
             {
                 // 设置线程池中最大的线程数
-                ThreadPool.SetMaxThreads(6, 6);                
+                ThreadPool.SetMaxThreads(6, 6);
                 // 创建Task的集合
-                List<Task> taskList = new List<Task>();
-                
+                List<System.Threading.Tasks.Task> taskList = new List<System.Threading.Tasks.Task>();
+
                 for (int i = 0; i < list.Count; i++)
                 {
                     int k = i;
@@ -424,34 +394,27 @@ namespace MonitorAndControl
                     }
                     else
                     {
-                        Task task = Task.Run(() =>
+                        System.Threading.Tasks.Task task = System.Threading.Tasks.Task.Run(() =>
                         {
                             string messagem1 = GetItem(list[k]);
                             if (messagem1 != "")
                             {
                                 //string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", messagem);
                                 messaagelist.Add(messagem1);
-                            }                            
+                            }
                         });
                         // 把task加入到集合中
                         taskList.Add(task);
                     }
                 }
-
-
                 try
                 {
-                    
-                    Console.WriteLine(DateTime.Now.ToString() + " 本次需要检测"+taskList.Count+"项");
+                    Console.WriteLine(DateTime.Now.ToString() + " 准备开始 本次需要检测" + taskList.Count + "项\r\n");
                     // Wait for all the tasks to finish.
-                    await Task.WhenAll(taskList.ToArray());                    
-
+                    await System.Threading.Tasks.Task.WhenAll(taskList.ToArray());
                     // We should never get to this point
-
-                    Console.WriteLine(DateTime.Now.ToString()+ "  WhenAll() has not thrown exceptions.");
-
+                    //Console.WriteLine(DateTime.Now.ToString()+ "  WhenAll() has not thrown exceptions.");
                     working = false;
-                    
                 }
                 catch (AggregateException e)
                 {
@@ -466,44 +429,52 @@ namespace MonitorAndControl
                 string a = "";
                 for (int i = 0; i < messaagelist.Count; i++)
                 {
-                    a = messaagelist[i].ToString().Trim();
-
+                    if (a == null) { a = messaagelist[i].ToString().Trim() + "\r\n"; }
+                    else { a = a + messaagelist[i].ToString().Trim() + "\r\n"; }
                 }
+                //DateTime now = DateTime.Now;//当前时间
+                //DateTime BeginOClock = DateTime.Today.AddHours(22.0); //22:00:00
+                //DateTime EndOClock = BeginOClock.AddDays(0.33);//增加半小时
                 if (a != "")
                 {
                     NoErr = 1;
                     string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", a);
-                    Console.WriteLine(DateTime.Now.ToString() + " 发现异常 已发送邮件" + a);
-                    Console.Write("\r\n\r\n");
-                    Console.Write(new WeCom().SendToWeCom(
+                    //Console.WriteLine(DateTime.Now.ToString() + " 发现异常 已发送邮件\r\n" + a);  
+                    Console.WriteLine(a);
+                    new WeCom().SendToWeCom(
                                         a,
                                         "wwed1606c46cbfc117"
                                         , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
                                         "1000002", "3"
-                                        ));                    
+                                        );
+                    Console.Write("\r\n");
                 }
                 else
-                {                    
-                    if (NoErr % 2 == 0 )
+                {
+                    if (NoErr % 12 == 0)
                     {
-                        string RandomWords=wsm.GetRandomWords();
-                        Console.Write("\r\n\r\n");
-                        Console.Write(new WeCom().SendToWeCom(
+                        string RandomWords = wsm.GetRandomWords();
+                        new WeCom().SendToWeCom(
                                             RandomWords,
                                             "wwed1606c46cbfc117"
                                             , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
-                                            "1000002","2"
-                                            ));
-
+                                            "1000002", "2"
+                                            );
+                        Console.Write("\r\n");
+                        //Console.Write(new WeCom().SendToWeCom(
+                        //                    RandomWords,
+                        //                    "wwed1606c46cbfc117"
+                        //                    , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
+                        //                    "1000002", "3"
+                        //                    ));
                     }
-                    Console.WriteLine(DateTime.Now.ToString() + " 无异常 未发送电子邮件");
-                   
+                    //Console.WriteLine(DateTime.Now.ToString() + " 无异常 未发送电子邮件\r\n");                   
                     NoErr = NoErr + 1;
                 }
-                GetDG(dt);         
-            }
-            Console.WriteLine(DateTime.Now.ToString() + " 本次完成\r\n\r\n");
-            working = false;
+                GetDG(dt);
+            }   
+            Console.WriteLine(DateTime.Now.ToString() + " 本次完成\r\n");
+            working = false;            
         }
 
         
@@ -514,56 +485,15 @@ namespace MonitorAndControl
         /// <param name="e"></param>
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            //Console.Write("\r\n\r\n");
-            //Console.Write(new WeCom().SendToWeCom(
-            //                    "msginfo",
-            //                    "wwed1606c46cbfc117"
-            //                    , "6DdwqL47r1J33_yOE5uM2hvBtAQcOxgiWAnkc7VDEVI",
-            //                    "1000003"
-            //                    )  );
-            //Console.Write("\r\n\r\n");
-
-            string a = "https://devapi.qweather.com/v7/weather/now?location=101010100&key=eb52e34d9cbb4dd5a7c1e07f4b731902";
-
-            string 青羊区 = "https://devapi.qweather.com/v7/weather/now?location=101270117&key=eb52e34d9cbb4dd5a7c1e07f4b731902";
-
-            string a1 = HttpUitls.Get(青羊区);
-            
-
-            JSON js = new JSON();
-            DataTable dt = js.ToDataTableOne(a1);
-
-
+            Win32ServiceManager wsm = new Win32ServiceManager();
+            string RandomWords = wsm.GetRandomWords();
             Console.Write("\r\n\r\n");
-
-            PythonProgram pp = new PythonProgram();
-            //pp.
-
-                //
-            //Console.Write(s);
-            //code API状态码，具体含义请参考状态码
-            //updateTime 当前API的最近更新时间
-            //fxLink 当前数据的响应式页面，便于嵌入网站或应用
-            //now.obsTime 数据观测时间
-            //now.temp 温度，默认单位：摄氏度
-            //now.feelsLike 体感温度，默认单位：摄氏度
-            //now.icon 天气状况和图标的代码，图标可通过天气状况和图标下载
-            //now.text 天气状况的文字描述，包括阴晴雨雪等天气状态的描述
-            //now.wind360 风向360角度
-            //now.windDir 风向
-            //now.windScale 风力等级
-            //now.windSpeed 风速，公里 / 小时
-            //now.humidity 相对湿度，百分比数值
-            //now.precip 当前小时累计降水量，默认单位：毫米
-            //now.pressure 大气压强，默认单位：百帕
-            //now.vis 能见度，默认单位：公里
-            //now.cloud 云量，百分比数值。可能为空
-            //now.dew 露点温度。可能为空
-            //refer.sources 原始数据来源，或数据源说明，可能为空
-            //refer.license 数据许可或版权声明，可能为空
-
-
-
+            Console.Write(new WeCom().SendToWeCom(
+                                RandomWords,
+                                "wwed1606c46cbfc117"
+                                , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
+                                "1000002", "2"
+                                ));
         }
         public class HttpUitls
         {
@@ -675,7 +605,104 @@ namespace MonitorAndControl
            // PythonApplication1 p = new PythonApplication1();
         }
 
+        /// <summary>
+        /// 设置定时器在零点执行任务
+        /// </summary>
+        private void setTaskAtFixedTime()
+        {
+            DateTime now = DateTime.Now;
+            DateTime zeroOClock = DateTime.Today.AddHours(22.0); //凌晨00:00:00
 
+            if (now > zeroOClock)
+            {
+                zeroOClock = zeroOClock.AddDays(0.5);
+            }
+
+
+             int   msUntilFour = (int)((zeroOClock - now).TotalMilliseconds);
+                   
+            
+            
+
+            var t = new System.Threading.Timer(doWeather);//发送天气预报
+
+
+            t.Change(msUntilFour, Timeout.Infinite);
+            
+
+        }
+
+
+        /// <summary>
+        /// 设置定时器在零点执行任务
+        /// </summary>
+        private void setTaskAtFixedTime(string WeatherOrIT)
+        {
+            if (WeatherOrIT == "Weather")
+            {
+                DateTime now = DateTime.Now;
+                DateTime zeroOClock = DateTime.Today.AddHours(0.0); //凌晨00:00:00
+                if (now > zeroOClock)
+                {
+                    zeroOClock = zeroOClock.AddDays(0.9);
+                }
+                int msUntilFour = (int)((zeroOClock - now).TotalMilliseconds);
+
+                var t = new System.Threading.Timer(doWeather);
+                t.Change(msUntilFour, Timeout.Infinite);
+            }
+            else if (WeatherOrIT == "IT") 
+            {
+            
+            }           
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="state"></param>
+        private void doWeather(object state)
+        {
+            //string debugPath = System.Environment.CurrentDirectory;           //此c#项目的debug文件夹路径
+            string pyexePath = @"E:\测试\工具\PythonApplication1\weather.exe";   //天气预报
+            //python文件所在路径，一般不使用绝对路径，此处仅作为例子，建议转移到debug文件夹下
+            Process p = new Process();
+            p.StartInfo.FileName = pyexePath;//需要执行的文件路径
+            p.StartInfo.UseShellExecute = false; //必需
+            p.StartInfo.RedirectStandardOutput = true;//输出参数设定
+            p.StartInfo.RedirectStandardInput = true;//传入参数设定
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.Arguments = "2 3";//参数以空格分隔，如果某个参数为空，可以传入””
+            p.Start();
+            string output = p.StandardOutput.ReadToEnd();
+            p.WaitForExit();//关键，等待外部程序退出后才能往下执行}
+            Console.Write(output);//输出
+            p.Close();
+            Console.Write("\r\n发送天气预报\r\n");
+            //再次设定
+            setTaskAtFixedTime();
+        }
+
+        //点击最小化到托盘
+        private void Main_SizeChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.Hide();   //隐藏窗体
+                notifyIcon1.Visible = true; //使托盘图标可见
+            }
+        }
+        //双击托盘图标重新显示
+        private void notifyIcon1_DoubleClick(object sender, EventArgs e)
+        {
+            this.Visible = true;
+            this.WindowState = FormWindowState.Normal;
+        }
     }
 }
 
