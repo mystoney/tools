@@ -202,120 +202,62 @@ namespace MonitorAndControl
         /// <param name="ResultSource">0自动，1手动</param>
         /// <returns></returns>
         public string CmdPing(string strIp,int ResultSource)
-
         {
-
-            Process p = new Process(); p.StartInfo.FileName = "cmd.exe";//设定程序名
-
+            Process p = new Process(); 
+            p.StartInfo.FileName = "cmd.exe";//设定程序名
             p.StartInfo.UseShellExecute = false; //关闭Shell的使用
-
             p.StartInfo.RedirectStandardInput = true;//重定向标准输入
-
             p.StartInfo.RedirectStandardOutput = true;//重定向标准输出
-
             p.StartInfo.RedirectStandardError = true;//重定向错误输出
-
             p.StartInfo.CreateNoWindow = true;//设置不显示窗口
 
-            string pingrst; p.Start(); p.StandardInput.WriteLine("ping " + strIp);
-
+            string pingrst; 
+            p.Start(); 
+            p.StandardInput.WriteLine("ping " + strIp);
             p.StandardInput.WriteLine("exit");
 
             string strRst = p.StandardOutput.ReadToEnd();
-            if (strRst.IndexOf("无法访问目标主机") != -1)
-
-            {
-
-                pingrst = "无法到达目的主机";
-
-            }
-
-            else if (strRst.IndexOf("(0% loss)") != -1)
-
-            {
-
-                pingrst = "连接";
-
-            }
-            else if (strRst.IndexOf("(0% 丢失)") != -1)
-            {
-                pingrst = "连接";
-            }
-
-            else if (strRst.IndexOf("Destination host unreachable.") != -1)
-
-            {
-
-                pingrst = "无法到达目的主机";
-
-            }
-            else if (strRst.IndexOf("一般故障。") != -1)
-
-            {
-
-                pingrst = "无法到达目的主机";
-
-            }
-
-            else if (strRst.IndexOf("Request timed out.") != -1)
-
-            {
-
-                pingrst = "超时";
-
-            }
-            else if (strRst.IndexOf("请求超时。") != -1)
-
-            {
-
-                pingrst = "超时";
-
-            }
-
-            else if (strRst.IndexOf("Unknown host") != -1)
-
-            {
-
-                pingrst = "无法解析主机";
-
-            }
-
-            else if (strRst.IndexOf("请求找不到主机") != -1)
-
-            {
-
-                pingrst = "无法解析主机";
-
-            }
-            else
-
-            {
-
-                pingrst = strRst;
-
-            }
-
+            if (strRst.IndexOf("无法访问目标主机") != -1) {pingrst = "无法到达目的主机";}
+            else if (strRst.IndexOf("(0% loss)") != -1){pingrst = "连接";}
+            else if (strRst.IndexOf("(0% 丢失)") != -1){pingrst = "连接";}
+            else if (strRst.IndexOf("Destination host unreachable.") != -1){pingrst = "无法到达目的主机";}
+            else if (strRst.IndexOf("一般故障。") != -1){pingrst = "无法到达目的主机";}
+            else if (strRst.IndexOf("Request timed out.") != -1){pingrst = "超时";}
+            else if (strRst.IndexOf("请求超时。") != -1){pingrst = "超时";}
+            else if (strRst.IndexOf("Unknown host") != -1){pingrst = "无法解析主机";}
+            else if (strRst.IndexOf("请求找不到主机") != -1){pingrst = "无法解析主机";}
+            else{pingrst = strRst;}
             //记录时间
-
-
-
             p.Close();
 
-            //Win32ServiceManager.ServerCheckItem a = new ServerCheckItem();
-            //a.ServerIP = strIp;
-            //a.CheckType = -1;
-            //a.CheckItem = "Ping";
-            //a.Inactive = 1;
-            //a.PriorityLevel = 0;
-            //a.ResultSource = 1;
-            //a.CheckResult = pingrst;
-            //a.ExecutionComputer = DBConn.DataAcess.SqlConn.GetMachineName();
-            //a.ExecutionIP = DBConn.DataAcess.SqlConn.GetLocalIP();
-            //a.ExecutionTime = DateTime.Now.ToString();
-            //SaveRecord(a);
+            if (pingrst != "连接") 
+            {
+                Process p1 = new Process();
+                p1.StartInfo.FileName = "cmd.exe";//设定程序名
+                p1.StartInfo.UseShellExecute = false; //关闭Shell的使用
+                p1.StartInfo.RedirectStandardInput = true;//重定向标准输入
+                p1.StartInfo.RedirectStandardOutput = true;//重定向标准输出
+                p1.StartInfo.RedirectStandardError = true;//重定向错误输出
+                p1.StartInfo.CreateNoWindow = true;//设置不显示窗口
+                
+                p1.Start();
+                p1.StandardInput.WriteLine("ping " + strIp);
+                p1.StandardInput.WriteLine("exit");
 
-
-
+                string strRst1 = p1.StandardOutput.ReadToEnd();
+                if (strRst.IndexOf("无法访问目标主机") != -1) { pingrst = "无法到达目的主机"; }
+                else if (strRst.IndexOf("(0% loss)") != -1) { pingrst = "连接"; }
+                else if (strRst.IndexOf("(0% 丢失)") != -1) { pingrst = "连接"; }
+                else if (strRst.IndexOf("Destination host unreachable.") != -1) { pingrst = "无法到达目的主机"; }
+                else if (strRst.IndexOf("一般故障。") != -1) { pingrst = "无法到达目的主机"; }
+                else if (strRst.IndexOf("Request timed out.") != -1) { pingrst = "超时"; }
+                else if (strRst.IndexOf("请求超时。") != -1) { pingrst = "超时"; }
+                else if (strRst.IndexOf("Unknown host") != -1) { pingrst = "无法解析主机"; }
+                else if (strRst.IndexOf("请求找不到主机") != -1) { pingrst = "无法解析主机"; }
+                else { pingrst = strRst; }
+                //记录时间
+                p.Close();
+            }
             return pingrst;
 
         }

@@ -109,10 +109,10 @@ namespace MonitorAndControl
             }
             else
             {
+                
                 btCheckkService.Enabled = true;                
                 btCheckPort.Enabled = false;
-           
-
+                
             }
             //w.SaveItem(tb_ServerIP.Text.ToString().Trim(), -1, "Ping");
 
