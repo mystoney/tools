@@ -42,17 +42,18 @@ namespace MonitorAndControl
             this.添加测试项目ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.测试ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.发送邮件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.新增ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.不朽ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.ToolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.Label1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.新增ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.发送邮件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.不朽ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DGMAIN = new MyContrals.ExDataGridView();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.加密ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -73,7 +74,7 @@ namespace MonitorAndControl
             this.测试ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1378, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(1378, 28);
             this.menuStrip1.TabIndex = 16;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -84,7 +85,7 @@ namespace MonitorAndControl
             this.端口ToolStripMenuItem,
             this.pingToolStripMenuItem});
             this.手动检测ToolStripMenuItem.Name = "手动检测ToolStripMenuItem";
-            this.手动检测ToolStripMenuItem.Size = new System.Drawing.Size(83, 26);
+            this.手动检测ToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
             this.手动检测ToolStripMenuItem.Text = "手动检测";
             this.手动检测ToolStripMenuItem.Click += new System.EventHandler(this.手动检测ToolStripMenuItem_Click);
             // 
@@ -115,7 +116,7 @@ namespace MonitorAndControl
             this.开始ToolStripMenuItem,
             this.停止ToolStripMenuItem});
             this.自动检测ToolStripMenuItem.Name = "自动检测ToolStripMenuItem";
-            this.自动检测ToolStripMenuItem.Size = new System.Drawing.Size(83, 26);
+            this.自动检测ToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
             this.自动检测ToolStripMenuItem.Text = "自动检测";
             this.自动检测ToolStripMenuItem.Click += new System.EventHandler(this.自动检测ToolStripMenuItem_Click);
             // 
@@ -136,7 +137,7 @@ namespace MonitorAndControl
             // 添加测试项目ToolStripMenuItem
             // 
             this.添加测试项目ToolStripMenuItem.Name = "添加测试项目ToolStripMenuItem";
-            this.添加测试项目ToolStripMenuItem.Size = new System.Drawing.Size(113, 26);
+            this.添加测试项目ToolStripMenuItem.Size = new System.Drawing.Size(113, 24);
             this.添加测试项目ToolStripMenuItem.Text = "添加测试项目";
             this.添加测试项目ToolStripMenuItem.Click += new System.EventHandler(this.添加测试项目ToolStripMenuItem_Click);
             // 
@@ -146,17 +147,39 @@ namespace MonitorAndControl
             this.toolStripMenuItem2,
             this.发送邮件ToolStripMenuItem,
             this.新增ToolStripMenuItem,
-            this.不朽ToolStripMenuItem});
+            this.不朽ToolStripMenuItem,
+            this.加密ToolStripMenuItem});
             this.测试ToolStripMenuItem.Name = "测试ToolStripMenuItem";
-            this.测试ToolStripMenuItem.Size = new System.Drawing.Size(53, 26);
+            this.测试ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.测试ToolStripMenuItem.Text = "测试";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 26);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(224, 26);
             this.toolStripMenuItem2.Text = "发微信";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            // 
+            // 发送邮件ToolStripMenuItem
+            // 
+            this.发送邮件ToolStripMenuItem.Name = "发送邮件ToolStripMenuItem";
+            this.发送邮件ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.发送邮件ToolStripMenuItem.Text = "发送邮件";
+            this.发送邮件ToolStripMenuItem.Click += new System.EventHandler(this.发送邮件ToolStripMenuItem_Click);
+            // 
+            // 新增ToolStripMenuItem
+            // 
+            this.新增ToolStripMenuItem.Name = "新增ToolStripMenuItem";
+            this.新增ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.新增ToolStripMenuItem.Text = "新增服务";
+            this.新增ToolStripMenuItem.Click += new System.EventHandler(this.新增ToolStripMenuItem_Click);
+            // 
+            // 不朽ToolStripMenuItem
+            // 
+            this.不朽ToolStripMenuItem.Name = "不朽ToolStripMenuItem";
+            this.不朽ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.不朽ToolStripMenuItem.Text = "不朽";
+            this.不朽ToolStripMenuItem.Click += new System.EventHandler(this.不朽ToolStripMenuItem_Click);
             // 
             // StatusStrip
             // 
@@ -190,7 +213,7 @@ namespace MonitorAndControl
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 30);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -201,39 +224,9 @@ namespace MonitorAndControl
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(1378, 690);
-            this.splitContainer1.SplitterDistance = 457;
+            this.splitContainer1.Size = new System.Drawing.Size(1378, 692);
+            this.splitContainer1.SplitterDistance = 458;
             this.splitContainer1.TabIndex = 18;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(3, 3);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(942, 223);
-            this.textBox1.TabIndex = 0;
-            // 
-            // 新增ToolStripMenuItem
-            // 
-            this.新增ToolStripMenuItem.Name = "新增ToolStripMenuItem";
-            this.新增ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.新增ToolStripMenuItem.Text = "新增服务";
-            this.新增ToolStripMenuItem.Click += new System.EventHandler(this.新增ToolStripMenuItem_Click);
-            // 
-            // 发送邮件ToolStripMenuItem
-            // 
-            this.发送邮件ToolStripMenuItem.Name = "发送邮件ToolStripMenuItem";
-            this.发送邮件ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.发送邮件ToolStripMenuItem.Text = "发送邮件";
-            this.发送邮件ToolStripMenuItem.Click += new System.EventHandler(this.发送邮件ToolStripMenuItem_Click);
-            // 
-            // 不朽ToolStripMenuItem
-            // 
-            this.不朽ToolStripMenuItem.Name = "不朽ToolStripMenuItem";
-            this.不朽ToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.不朽ToolStripMenuItem.Text = "不朽";
-            this.不朽ToolStripMenuItem.Click += new System.EventHandler(this.不朽ToolStripMenuItem_Click);
             // 
             // DGMAIN
             // 
@@ -249,8 +242,17 @@ namespace MonitorAndControl
             this.DGMAIN.RowHeadersWidth = 51;
             this.DGMAIN.RowTemplate.Height = 27;
             this.DGMAIN.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DGMAIN.Size = new System.Drawing.Size(1378, 457);
+            this.DGMAIN.Size = new System.Drawing.Size(1378, 458);
             this.DGMAIN.TabIndex = 19;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(3, 3);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(942, 223);
+            this.textBox1.TabIndex = 0;
             // 
             // notifyIcon1
             // 
@@ -258,6 +260,13 @@ namespace MonitorAndControl
             this.notifyIcon1.Text = "notifyIcon1";
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
+            // 
+            // 加密ToolStripMenuItem
+            // 
+            this.加密ToolStripMenuItem.Name = "加密ToolStripMenuItem";
+            this.加密ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.加密ToolStripMenuItem.Text = "加密";
+            this.加密ToolStripMenuItem.Click += new System.EventHandler(this.加密ToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -311,5 +320,6 @@ namespace MonitorAndControl
         private System.Windows.Forms.ToolStripMenuItem 发送邮件ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 不朽ToolStripMenuItem;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ToolStripMenuItem 加密ToolStripMenuItem;
     }
 }

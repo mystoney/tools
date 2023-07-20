@@ -288,7 +288,11 @@ namespace MonitorAndControl
 
         private void btCheckkService_Click(object sender, EventArgs e)
         {
-            if (tb_ServiceName.Text.ToString().Trim() == ""|| tb_ServiceName.Text.ToString().Trim() == string.Empty) { MessageBox.Show("请输入服务名称"); return; }
+            if (tb_ServiceName.Text.ToString().Trim() == "" || tb_ServiceName.Text.ToString().Trim() == string.Empty) { MessageBox.Show("请输入服务名称"); return; }
+            else
+            { 
+                
+            }
             Win32ServiceManager wm = new Win32ServiceManager();
             string ServerIP = tb_ServerIP.Text.Trim();
             string ServiceName =tb_ServiceName.Text.Trim();
@@ -308,6 +312,7 @@ namespace MonitorAndControl
                 MessageBox.Show(s);
                 return;
             }
+            
             Array ssss = wm.GetServiceList(ServerIP, "highrock\\administrator", "@pStRy8214", ServiceName);
 
 

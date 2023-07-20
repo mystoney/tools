@@ -28,7 +28,9 @@ namespace MonitorAndControl
         {
             if (textBox1.Text.Trim() != "")
             {
-                stringPassword = textBox1.Text.Trim();this.DialogResult = DialogResult.OK;
+                stringPassword = DBCon.DBUtility.DESEncrypt.Encrypt(textBox1.Text.Trim());
+                //stringPassword = textBox1.Text.Trim();
+                this.DialogResult = DialogResult.OK;
             }
             else { MessageBox.Show("请输入密码"); this.DialogResult = DialogResult.No; }
 

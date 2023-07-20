@@ -72,7 +72,9 @@ namespace MonitorAndControl
 
 
             //string a=s.GetServiceList(ServerName1).ToString();
-            if (aaaa.GetValue(0, 0).ToString().Trim() == "找不到")
+            if ((aaaa.GetValue(0, 0) == null))
+            { MessageBox.Show("找不到此服务，请确认服务名称"); return; }
+            else if (aaaa.GetValue(0, 0).ToString().Trim() == "找不到" || aaaa.GetValue(0, 0).ToString().Trim() == "拒绝访问")
             { MessageBox.Show("找不到此服务，请确认服务名称"); return; }
             txb_ServiceName.Text = aaaa.GetValue(0, 0).ToString();
 
@@ -185,8 +187,9 @@ namespace MonitorAndControl
             }
         }
 
-
-
+        private void ServiceManage_Load(object sender, EventArgs e)
+        {
 
         }
+    }
 }

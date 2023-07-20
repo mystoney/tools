@@ -31,7 +31,11 @@ namespace DBConn.DataAcess
     public abstract class SqlConn
     {
         //���ݿ������ַ���(App.config������)�����Զ�̬����connectionString֧�ֶ����ݿ�.		
-        public static string connectionString = PubConstant.ConnectionSQLString;
+       public static string connectionString = PubConstant.ConnectionSQLString;
+
+
+
+
 
         public SqlConn()
         {

@@ -1,4 +1,5 @@
 ﻿using email;
+using Microsoft.Office.Interop.Excel;
 using Microsoft.Win32.TaskScheduler;
 using System;
 using System.Collections.Generic;
@@ -60,10 +61,10 @@ namespace MonitorAndControl
 
         public class ConsoleTextWriter : TextWriter
         {
-            private TextBox _textBox;
+            private System.Windows.Forms.TextBox _textBox;
             public override Encoding Encoding => Encoding.UTF8;
 
-            public ConsoleTextWriter(TextBox textBox)
+            public ConsoleTextWriter(System.Windows.Forms.TextBox textBox)
             {
                 _textBox = textBox;
             }
@@ -79,7 +80,7 @@ namespace MonitorAndControl
 
 
 
-        private void GetDG(DataTable dt)
+        private void GetDG(System.Data.DataTable dt)
         {         
             DGMAIN.SetDataSource(dt);
             if (this.DGMAIN.Columns.Count == 0)
@@ -116,7 +117,7 @@ namespace MonitorAndControl
 
             list = wsm.GetItem();
 
-            DataTable dt = DataTableExtend.ToDataTable<ServerCheckItem>(list);
+            System.Data.DataTable dt = DataTableExtend.ToDataTable<ServerCheckItem>(list);
 
 
             //DataTable dtrecord = wsm.GetRecord();
@@ -425,7 +426,7 @@ namespace MonitorAndControl
                     }
                     working = false;
                 }
-                DataTable dt = DataTableExtend.ToDataTable<ServerCheckItem>(list);
+                System.Data.DataTable dt = DataTableExtend.ToDataTable<ServerCheckItem>(list);
                 string a = "";
 
                 for (int i = 0; i < messaagelist.Count; i++)
@@ -441,7 +442,7 @@ namespace MonitorAndControl
                     if (a != "")
                     {
                         NoErr = 1;
-                        string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", a);
+                        //string SendMailResult = Emailhelp.SendMailUseZj("stoney_xu@highrock.com.cn", "请检查相关服务器状态", a);
                         //Console.WriteLine(DateTime.Now.ToString() + " 发现异常 已发送邮件\r\n" + a);  
                         if (str6oclock != "")
                         {
@@ -728,6 +729,16 @@ namespace MonitorAndControl
         {
             this.Visible = true;
             this.WindowState = FormWindowState.Normal;
+        }
+
+        private void 加密ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //加密连接字符串 string aa = "server=172.16.1.77;User ID=sa;Password=@Fuf%wfY;database=ServiceManage";
+            InputPassWord ps = new InputPassWord();
+            ps.ShowDialog();
+            if (ps.DialogResult != DialogResult.OK) { MessageBox.Show("请重新输入密码"); return; }            
+            Clipboard.SetText(ps.stringPassword);
+            MessageBox.Show("密码已复制到剪切板，请继续");            
         }
     }
 }

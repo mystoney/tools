@@ -52,9 +52,11 @@ namespace MonitorAndControl
                     MessageBox.Show(s);
                     return;
                 }
-                
-
-                int r= GetValue(ServerIP, tb_ServiceName.Text.ToString().Trim());
+                InputPassWord ps = new InputPassWord();
+                ps.ShowDialog();
+                if (ps.DialogResult != DialogResult.OK) { MessageBox.Show("请重新输入密码"); return; }
+                string psw = ps.stringPassword;
+                int r= GetValue(ServerIP, tb_ServiceName.Text.ToString().Trim(), psw);
                 if (r == 0) { MessageBox.Show("找不到此服务，请确认服务名称"); return; }
                 tb_AddPort.Text = "";                
                 CheckItem = tb_ServiceName.Text.ToString().Trim();
@@ -94,11 +96,11 @@ namespace MonitorAndControl
             else { MessageBox.Show("重复的项目"); }
         }
 
-        private int GetValue(String ServerIP, string ServiceName)
+        private int GetValue(String ServerIP, string ServiceName,string psw)
         {
             Win32ServiceManager s = new Win32ServiceManager();
             //string ServerName1 = "SQLSERVERAGENT";
-            Array aaaa = s.GetServiceList(ServerIP, "highrock\\administrtor", "@pStRy8214", ServiceName);
+            Array aaaa = s.GetServiceList(ServerIP, "highrock\\administrtor", "@pStRy8214", DBCon.DBUtility.DESEncrypt.Decrypt(psw));
             //string a=s.GetServiceList(ServerName1).ToString();
             if (aaaa.GetValue(0, 0).ToString().Trim() == "找不到" || aaaa.GetValue(0, 0).ToString().Trim() == "RPC 服务器不可用。")
             { return 0; }

@@ -232,6 +232,7 @@ namespace MonitorAndControl
 
             if (pingrst != "连接") 
             {
+                Thread.Sleep(5000);
                 Process p1 = new Process();
                 p1.StartInfo.FileName = "cmd.exe";//设定程序名
                 p1.StartInfo.UseShellExecute = false; //关闭Shell的使用
@@ -839,6 +840,11 @@ namespace MonitorAndControl
                 set;
             }
 
+            public string DBPassword
+            {
+                get;
+                set;
+            }
             public int Inactive
             {
                 get;

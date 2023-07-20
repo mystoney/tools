@@ -249,6 +249,7 @@ namespace MonitorAndControl
             this.Name = "ServiceManage";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ServiceManage";
+            this.Load += new System.EventHandler(this.ServiceManage_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
