@@ -223,6 +223,7 @@ namespace MonitorAndControl
                 Win32ServiceManager.ServerCheckItem a = new ServerCheckItem();
                 a.ServerIP = tb_ServerIP.Text.ToString().Trim();
                 a.CheckType = 1;
+                
                 a.CheckItem = tb_AddPort.Text.Trim();
                 a.Inactive = 1;
                 a.PriorityLevel = 0;
@@ -288,17 +289,26 @@ namespace MonitorAndControl
 
         private void btCheckkService_Click(object sender, EventArgs e)
         {
+
             if (tb_ServiceName.Text.ToString().Trim() == "" || tb_ServiceName.Text.ToString().Trim() == string.Empty) { MessageBox.Show("请输入服务名称"); return; }
-            else
-            { 
-                
+            
+            InputPassWord inputPassWord= new InputPassWord();
+            inputPassWord.ShowDialog();
+            if (inputPassWord.DialogResult != DialogResult.OK)
+            {
+                MessageBox.Show("请重新输入用户名密码"); return;
             }
+            string stringUsername = inputPassWord.stringUsername;
+            string stringPassword = inputPassWord.stringPassword;
+            
             Win32ServiceManager wm = new Win32ServiceManager();
             string ServerIP = tb_ServerIP.Text.Trim();
             string ServiceName =tb_ServiceName.Text.Trim();
 
             Win32ServiceManager.ServerCheckItem a = new ServerCheckItem();
             a.ServerIP = ServerIP;
+            a.SvrUser = stringUsername;
+            a.SvrPwd= stringPassword;
             a.CheckType = 0;
             a.CheckItem = ServiceName;
             a.Inactive = 1;
@@ -313,7 +323,7 @@ namespace MonitorAndControl
                 return;
             }
             
-            Array ssss = wm.GetServiceList(ServerIP, "highrock\\administrator", "@pStRy8214", ServiceName);
+            Array ssss = wm.GetServiceList(a.ServerIP, a.SvrUser, a.SvrPwd, a.CheckItem);
 
 
             if (ssss.GetValue(0, 2).ToString().Trim() == "找不到" || ssss.GetValue(0, 2).ToString().Trim() == "RPC 服务器不可用。")

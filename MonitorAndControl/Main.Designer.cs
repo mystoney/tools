@@ -45,6 +45,7 @@ namespace MonitorAndControl
             this.发送邮件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.新增ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.不朽ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.加密ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.ToolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.Label1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -53,7 +54,7 @@ namespace MonitorAndControl
             this.DGMAIN = new MyContrals.ExDataGridView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.加密ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.访问linuxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -148,7 +149,8 @@ namespace MonitorAndControl
             this.发送邮件ToolStripMenuItem,
             this.新增ToolStripMenuItem,
             this.不朽ToolStripMenuItem,
-            this.加密ToolStripMenuItem});
+            this.加密ToolStripMenuItem,
+            this.访问linuxToolStripMenuItem});
             this.测试ToolStripMenuItem.Name = "测试ToolStripMenuItem";
             this.测试ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.测试ToolStripMenuItem.Text = "测试";
@@ -180,6 +182,13 @@ namespace MonitorAndControl
             this.不朽ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.不朽ToolStripMenuItem.Text = "不朽";
             this.不朽ToolStripMenuItem.Click += new System.EventHandler(this.不朽ToolStripMenuItem_Click);
+            // 
+            // 加密ToolStripMenuItem
+            // 
+            this.加密ToolStripMenuItem.Name = "加密ToolStripMenuItem";
+            this.加密ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.加密ToolStripMenuItem.Text = "加密";
+            this.加密ToolStripMenuItem.Click += new System.EventHandler(this.加密ToolStripMenuItem_Click);
             // 
             // StatusStrip
             // 
@@ -261,12 +270,12 @@ namespace MonitorAndControl
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
             // 
-            // 加密ToolStripMenuItem
+            // 访问linuxToolStripMenuItem
             // 
-            this.加密ToolStripMenuItem.Name = "加密ToolStripMenuItem";
-            this.加密ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.加密ToolStripMenuItem.Text = "加密";
-            this.加密ToolStripMenuItem.Click += new System.EventHandler(this.加密ToolStripMenuItem_Click);
+            this.访问linuxToolStripMenuItem.Name = "访问linuxToolStripMenuItem";
+            this.访问linuxToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.访问linuxToolStripMenuItem.Text = "访问linux";
+            this.访问linuxToolStripMenuItem.Click += new System.EventHandler(this.访问linuxToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -321,5 +330,6 @@ namespace MonitorAndControl
         private System.Windows.Forms.ToolStripMenuItem 不朽ToolStripMenuItem;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ToolStripMenuItem 加密ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 访问linuxToolStripMenuItem;
     }
 }

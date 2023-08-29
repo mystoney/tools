@@ -7,12 +7,15 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Management;
 using System.Net;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static MonitorAndControl.Win32ServiceManager;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Action = System.Action;
 
 namespace MonitorAndControl
@@ -354,12 +357,34 @@ namespace MonitorAndControl
             }
             if (ServerCheckItem.CheckType == 0 && ServerCheckItem.CheckResult != "Running")
             {
-                messagem = messagem + "\r\n" + ServerCheckItem.ServerIP.ToString() + "的服务" + ServerCheckItem.CheckItem.ToString() + "无法检测到，结果为：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "Windows服务检查：" +ServerCheckItem.ServerIP.ToString() + "的服务" + ServerCheckItem.CheckItem.ToString() + "无法检测到，结果为：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
 
             }
             if (ServerCheckItem.CheckType == 1 && ServerCheckItem.CheckResult != "端口打开")
             {
-                messagem = messagem + "\r\n" + ServerCheckItem.ServerIP.ToString() + "的端口" + ServerCheckItem.CheckItem.ToString() + "关闭，结果为：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "端口检查：" +ServerCheckItem.ServerIP.ToString() + "的端口" + ServerCheckItem.CheckItem.ToString() + "关闭，结果为：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+            }
+            if (ServerCheckItem.CheckType == -2 && ServerCheckItem.CheckResult != "Windows磁盘空间正常")
+            {
+                string[] strArray = ServerCheckItem.CheckItem.ToString().Trim().Split('!');
+                string _disksrc = strArray[0];
+                string _threshold = strArray[1];
+                messagem = messagem+ "\r\n" + "Windows磁盘检查："  +ServerCheckItem.ServerIP + "的"+_disksrc+ "盘空间不足"+ _threshold + "GB 可用空间为" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+            }
+            if (ServerCheckItem.CheckType == -3 && ServerCheckItem.CheckResult != "正常")
+            {
+                string[] strArray = ServerCheckItem.CheckItem.ToString().Trim().Split('!');
+                int _port = (int)Convert.ToInt64(strArray[0]);
+                string _ServiceName = strArray[1];
+                
+                messagem = messagem + "\r\n" + "CentOS服务检查：" +ServerCheckItem.ServerIP + "服务"+_ServiceName + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+            }
+            if (ServerCheckItem.CheckType == -4 && ServerCheckItem.CheckResult != "正常")
+            {
+                string[] strArray = ServerCheckItem.CheckItem.ToString().Trim().Split('!');
+                int _port = (int)Convert.ToInt64(strArray[0]);
+                string _path = strArray[1];
+                messagem = messagem + "\r\n" + "CentOS磁盘检查：" + ServerCheckItem.ServerIP + " /" + _path+"剩余空间为"+ ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
             }
 
             return messagem;
@@ -469,10 +494,22 @@ namespace MonitorAndControl
                         }  
                     }
                     else
-                    {
+                    {///stoney a aaaaaaa
                         if (NoErr % 12 == 0)
                         {
-                            string RandomWords = wsm.GetRandomWords();
+                            string RandomWords = "";
+                            string Joke = wsm.GetJoke();//取66服务器上的笑话
+                            if (Joke == "")
+                            {
+                                RandomWords ="来自77的笑话"+"\r\n"+ wsm.GetRandomWords();//取1.77数据库的笑话
+                            }
+                            else
+                            {
+                                RandomWords = "来自66的笑话" + "\r\n" + Joke.Trim();
+                            }
+
+                           
+
                             new WeCom().SendToWeCom(
                                                 RandomWords,
                                                 "wwed1606c46cbfc117"
@@ -739,6 +776,18 @@ namespace MonitorAndControl
             if (ps.DialogResult != DialogResult.OK) { MessageBox.Show("请重新输入密码"); return; }            
             Clipboard.SetText(ps.stringPassword);
             MessageBox.Show("密码已复制到剪切板，请继续");            
+        }
+
+        private void 访问linuxToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Win32ServiceManager wsm= new Win32ServiceManager();
+            //DiskInfo diskInfo = new DiskInfo();
+            //diskInfo = wsm.LinuxGetFolderDiskInfo("172.16.1.99",2263,"root","Rainoo5683@","data");
+
+
+            //string a=wsm.LinuxGetServicesInfo("172.16.1.99", 2263, "root", "Rainoo5683@", "mysql");
+
+            string Joke = wsm.GetJoke();
         }
     }
 }

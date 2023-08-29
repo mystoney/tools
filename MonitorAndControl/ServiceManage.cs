@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static IronPython.Modules._ast;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace MonitorAndControl
 {
@@ -17,6 +19,7 @@ namespace MonitorAndControl
         {
             InitializeComponent();
         }
+
         string ServerIP = "";//服务器IP
         string ServiceName = "";//服务名称
         private void button1_Click(object sender, EventArgs e)
@@ -27,8 +30,13 @@ namespace MonitorAndControl
             txb_State.Text = "";
             ServerIP = combo_ServerIP.Text.ToString();
             ServiceName = combo_ServiceName_User.Text.ToString().Trim();
+            InputPassWord ps = new InputPassWord();
+            ps.ShowDialog();
+            if (ps.DialogResult != DialogResult.OK) { MessageBox.Show("请重新输入密码"); return; }
+            string SvrUser = ps.stringUsername;
+            string Svrpwd = ps.stringPassword;
 
-            Win32ServiceManager M = new Win32ServiceManager();
+            Win32ServiceManager M = new Win32ServiceManager(ServerIP, SvrUser, Svrpwd);
             string s = M.CmdPing(ServerIP,1);
             if (s != "连接")
             {
@@ -42,7 +50,7 @@ namespace MonitorAndControl
                 MessageBox.Show("请选择服务器地址和服务");
                 return;
             }
-            GetValue(ServerIP, ServiceName);
+            GetValue(ServerIP, SvrUser, Svrpwd, ServiceName);
         }
 
         private void bt_StartService_Click(object sender, EventArgs e)
@@ -57,16 +65,16 @@ namespace MonitorAndControl
             Win32ServiceManager s = new Win32ServiceManager(ServerIP, "highrock\\administrator", "@pStRy8214");
 
             s.StartService(ServiceName);
-            GetValue(ServerIP, ServiceName);
+          //  GetValue(ServerIP, ServiceName);
         }
 
-        private void GetValue(String ServerIP, string ServiceName)
+        private void GetValue(String ServerIP,string stringUsername, string stringPassword, string ServiceName)
         {
-            InputPassWord ps = new InputPassWord();
-            ps.ShowDialog();
-            if (ps.DialogResult != DialogResult.OK) { MessageBox.Show("请重新输入密码");return; }
-            string psw = ps.stringPassword;
-            Win32ServiceManager s = new Win32ServiceManager(ServerIP, "highrock\\administrator", psw);
+            
+            string psw = stringPassword;
+            string username = stringUsername;
+            Win32ServiceManager s = new Win32ServiceManager(ServerIP, username, psw);
+            
             //string ServerName1 = "SQLSERVERAGENT";
             Array aaaa = s.GetServiceList(ServiceName);
 
@@ -122,7 +130,7 @@ namespace MonitorAndControl
             Win32ServiceManager s = new Win32ServiceManager(ServerIP, "highrock\\administrator", "@pStRy8214");
 
             s.StopService(ServiceName);
-            GetValue(ServerIP, ServiceName);
+           // GetValue(ServerIP, ServiceName);
         }
 
 

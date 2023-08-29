@@ -16,23 +16,26 @@ namespace MonitorAndControl
         {
             InitializeComponent();
         }
+        public string stringUsername = "";
         public string stringPassword = "";
         
         private void InputPassWord_Load(object sender, EventArgs e)
         {
+            stringUsername = "";
             stringPassword = "";
 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text.Trim() != "")
+            if (textBox1.Text.Trim() != "" && textBox2.Text.Trim()!="")
             {
+                stringUsername= DBCon.DBUtility.DESEncrypt.Encrypt(textBox2.Text.Trim());
                 stringPassword = DBCon.DBUtility.DESEncrypt.Encrypt(textBox1.Text.Trim());
                 //stringPassword = textBox1.Text.Trim();
                 this.DialogResult = DialogResult.OK;
             }
-            else { MessageBox.Show("请输入密码"); this.DialogResult = DialogResult.No; }
+            else { MessageBox.Show("请输入用户名和密码，密码不能为空"); this.DialogResult = DialogResult.No; }
 
         }
 

@@ -43,6 +43,7 @@ namespace MonitorAndControl
             int save = 0;
             if (R_Service.Checked) 
             {
+
                 CheckType = 0;//0为服务 1为端口
                 if (tb_ServiceName.Text.ToString().Trim()==""|| tb_ServiceName.Text.ToString().Trim() == "输入服务名称") { MessageBox.Show("请输入服务名称"); return; }
                 ServerIP = tb_ServerIP.Text.Trim();
@@ -55,8 +56,9 @@ namespace MonitorAndControl
                 InputPassWord ps = new InputPassWord();
                 ps.ShowDialog();
                 if (ps.DialogResult != DialogResult.OK) { MessageBox.Show("请重新输入密码"); return; }
+                string username = ps.stringUsername;
                 string psw = ps.stringPassword;
-                int r= GetValue(ServerIP, tb_ServiceName.Text.ToString().Trim(), psw);
+                int r= GetValue(ServerIP, username, psw,tb_ServiceName.Text.ToString().Trim(), psw);
                 if (r == 0) { MessageBox.Show("找不到此服务，请确认服务名称"); return; }
                 tb_AddPort.Text = "";                
                 CheckItem = tb_ServiceName.Text.ToString().Trim();
@@ -96,11 +98,11 @@ namespace MonitorAndControl
             else { MessageBox.Show("重复的项目"); }
         }
 
-        private int GetValue(String ServerIP, string ServiceName,string psw)
+        private int GetValue(String ServerIP, string ServerUserName, string ServerPassWord, string ServiceName,string psw)
         {
             Win32ServiceManager s = new Win32ServiceManager();
             //string ServerName1 = "SQLSERVERAGENT";
-            Array aaaa = s.GetServiceList(ServerIP, "highrock\\administrtor", "@pStRy8214", DBCon.DBUtility.DESEncrypt.Decrypt(psw));
+            Array aaaa = s.GetServiceList(ServerIP, ServerUserName, ServerPassWord, DBCon.DBUtility.DESEncrypt.Decrypt(psw));
             //string a=s.GetServiceList(ServerName1).ToString();
             if (aaaa.GetValue(0, 0).ToString().Trim() == "找不到" || aaaa.GetValue(0, 0).ToString().Trim() == "RPC 服务器不可用。")
             { return 0; }
