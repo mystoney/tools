@@ -86,8 +86,16 @@ namespace MonitorAndControl
                 services[i, 1] = (string)mo["DisplayName"];
                 services[i, 2] = (string)mo["State"];
                 services[i, 3] = (string)mo["StartMode"];
+
                 i++;
             }
+            //if (services[i, 2] != "Running")
+            //{
+                
+            //    StartService(services[i, 0]);
+
+            //    services[i, 2] = "已尝试重启";
+            //}
             return services;
         }
         // 获取所连接的计算机的指定服务数据
@@ -115,6 +123,14 @@ namespace MonitorAndControl
                     services[i, 1] = (string)mo["DisplayName"];
                     services[i, 2] = (string)mo["State"];
                     services[i, 3] = (string)mo["StartMode"];
+
+                    if (services[i, 2] != "Running")
+                    {
+                        StartService(services[i, 0]);
+
+                        services[i, 2] = "已重新启动";
+                    }
+                    i++;
                 }
 
             }
@@ -751,7 +767,7 @@ namespace MonitorAndControl
                 string message = GetDiskSize(ServerCheckItem.ServerIP, ServerCheckItem.SvrUser, ServerCheckItem.SvrPwd, _disksrc, _threshold);
                 if (message == "")
                 {
-                    message = "Windows磁盘空间正常";
+                    message = "正常";
                 }
                 ServerCheckItem.CheckResult = message;
             }

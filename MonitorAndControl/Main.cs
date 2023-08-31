@@ -352,24 +352,24 @@ namespace MonitorAndControl
             wsm.CheckLine(ServerCheckItem);
             if (ServerCheckItem.CheckType == -1 && ServerCheckItem.CheckResult != "连接")
             {
-                messagem = messagem + "\r\n" + "Ping " + ServerCheckItem.ServerIP.ToString() + " 失败，结果为：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "Ping " + ServerCheckItem.ServerIP.ToString() + " 失败：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
 
             }
             if (ServerCheckItem.CheckType == 0 && ServerCheckItem.CheckResult != "Running")
             {
-                messagem = messagem + "\r\n" + "Windows服务检查：" +ServerCheckItem.ServerIP.ToString() + "的服务" + ServerCheckItem.CheckItem.ToString() + "无法检测到，结果为：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "Windows服务：" +ServerCheckItem.ServerIP.ToString() + " " + ServerCheckItem.CheckItem.ToString() + "：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
 
             }
             if (ServerCheckItem.CheckType == 1 && ServerCheckItem.CheckResult != "端口打开")
             {
-                messagem = messagem + "\r\n" + "端口检查：" +ServerCheckItem.ServerIP.ToString() + "的端口" + ServerCheckItem.CheckItem.ToString() + "关闭，结果为：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "端口：" +ServerCheckItem.ServerIP.ToString() + ":" + ServerCheckItem.CheckItem.ToString() + "：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
             }
-            if (ServerCheckItem.CheckType == -2 && ServerCheckItem.CheckResult != "Windows磁盘空间正常")
+            if (ServerCheckItem.CheckType == -2 && ServerCheckItem.CheckResult != "正常")
             {
                 string[] strArray = ServerCheckItem.CheckItem.ToString().Trim().Split('!');
                 string _disksrc = strArray[0];
                 string _threshold = strArray[1];
-                messagem = messagem+ "\r\n" + "Windows磁盘检查："  +ServerCheckItem.ServerIP + "的"+_disksrc+ "盘空间不足"+ _threshold + "GB 可用空间为" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+                messagem = messagem+ "\r\n" + "Windows磁盘："  +ServerCheckItem.ServerIP + "的"+_disksrc+ "盘不足"+ _threshold + "GB 可用空间" + ServerCheckItem.CheckResult.ToString() + "GB " + ServerCheckItem.ExecutionTime;
             }
             if (ServerCheckItem.CheckType == -3 && ServerCheckItem.CheckResult != "正常")
             {
@@ -377,14 +377,14 @@ namespace MonitorAndControl
                 int _port = (int)Convert.ToInt64(strArray[0]);
                 string _ServiceName = strArray[1];
                 
-                messagem = messagem + "\r\n" + "CentOS服务检查：" +ServerCheckItem.ServerIP + "服务"+_ServiceName + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "CentOS服务：" +ServerCheckItem.ServerIP + "服务"+_ServiceName + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
             }
             if (ServerCheckItem.CheckType == -4 && ServerCheckItem.CheckResult != "正常")
             {
                 string[] strArray = ServerCheckItem.CheckItem.ToString().Trim().Split('!');
                 int _port = (int)Convert.ToInt64(strArray[0]);
                 string _path = strArray[1];
-                messagem = messagem + "\r\n" + "CentOS磁盘检查：" + ServerCheckItem.ServerIP + " /" + _path+"剩余空间为"+ ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "CentOS磁盘：" + ServerCheckItem.ServerIP + " /" + _path+" 剩余空间"+ ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
             }
 
             return messagem;
