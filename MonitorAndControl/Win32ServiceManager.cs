@@ -30,6 +30,7 @@ using static IronPython.Modules._ast;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Security.Cryptography;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using IronPython.Runtime;
 
 
 namespace MonitorAndControl
@@ -1318,7 +1319,7 @@ namespace MonitorAndControl
         /// <returns></returns>
         public string GetJoke()
         {
-            string a = "";
+            string resultstr = "";
             // 创建一个Web请求
             HttpWebRequest request = WebRequest.Create("http://kr1.sickkle.com/joke") as HttpWebRequest;
 
@@ -1327,16 +1328,23 @@ namespace MonitorAndControl
             {
                 // 取得输出流
                 StreamReader reader = new StreamReader(response.GetResponseStream());
-                a = reader.ReadToEnd();
+                string a = reader.ReadToEnd();
+
+                
+
 
                 JavaScriptSerializer js = new JavaScriptSerializer();   //实例化一个能够序列化数据的类
 
                 Joke list = js.Deserialize<Joke>(a);    //将json数据转化为对象类型并赋值给list
                 string msg = list.msg;
                 string sign = list.sign;
-                string b = DBCon.DBUtility.a
+                byte[] Text = System.Text.Encoding.Default.GetBytes(msg);
+                byte[] key = System.Text.Encoding.Default.GetBytes("5a75d5ec839a8f1ed686f0ddb67d5f09");
+                byte[] iv = System.Text.Encoding.Default.GetBytes("f244ef6f0accec87");
+                byte[] b = DBConn.DBUtility.AESEncrypt.Decrypt(a, "5a75d5ec839a8f1ed686f0ddb67d5f09", "f244ef6f0accec87");
+                resultstr = System.Text.Encoding.Default.GetString(b);
             }
-            return a;
+            return resultstr;
 
 
             
@@ -1351,6 +1359,7 @@ namespace MonitorAndControl
                             //向量是md5(Yves)的前16位
 
         }
+  
         public class Joke
         {
             public string msg { get; set; }

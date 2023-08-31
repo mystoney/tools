@@ -14,74 +14,61 @@ namespace DBConn.DBUtility
         {
 
         }
-        #region ========加密========       
-        /// <summary> 
-        /// 加密数据 
-        /// </summary> 
-        /// <param name="Text"></param> 
-        /// <param name="sKey"></param> 
-        /// <returns></returns> 
-        public static byte[] Encrypt(byte[] Text, byte[] key, byte[] iv)
+        /// <summary>
+        /// AES加密
+        /// </summary>
+        /// <param name="text">明文字符串</param>
+        /// <param name="key">秘钥</param>
+        /// <param name="iv">加密辅助向量</param>
+        /// <returns>密文</returns>
+        public static string Encrypt(string text, string key, string iv)
         {
-
-            using (Aes aes = Aes.Create())
-            {
-                aes.Key = key;
-                aes.IV = iv;
-                aes.Mode = CipherMode.CBC;
-                aes.Padding = PaddingMode.PKCS7;
-
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    using (ICryptoTransform encryptor = aes.CreateEncryptor())
-                    {
-                        using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
-                        {
-                            cs.Write(Text, 0, Text.Length);
-                            cs.FlushFinalBlock();
-                            return ms.ToArray();
-                        }
-                    }
-                }
-            }
+            RijndaelManaged rijndaelCipher = new RijndaelManaged();
+            rijndaelCipher.Mode = CipherMode.CBC;
+            rijndaelCipher.Padding = PaddingMode.PKCS7;
+            rijndaelCipher.KeySize = 128;
+            rijndaelCipher.BlockSize = 128;
+            byte[] pwdBytes = System.Text.Encoding.UTF8.GetBytes(key);
+            byte[] keyBytes = new byte[16];
+            int len = pwdBytes.Length;
+            if (len > keyBytes.Length) len = keyBytes.Length;
+            System.Array.Copy(pwdBytes, keyBytes, len);
+            rijndaelCipher.Key = keyBytes;
+            byte[] ivBytes = System.Text.Encoding.UTF8.GetBytes(iv);
+            rijndaelCipher.IV = ivBytes;
+            ICryptoTransform transform = rijndaelCipher.CreateEncryptor();
+            byte[] plainText = Encoding.UTF8.GetBytes(text);
+            byte[] cipherBytes = transform.TransformFinalBlock(plainText, 0, plainText.Length);
+            return Convert.ToBase64String(cipherBytes);
         }
 
-        #endregion
-
-        #region ========解密========
-
-        /// <summary> 
-        /// 解密数据 
-        /// </summary> 
-        /// <param name="Text"></param> 
-        /// <param name="sKey"></param> 
-        /// <returns></returns> 
-        public static byte[] Decrypt(byte[] Text, byte[] key, byte[] iv)
+        /// <summary>
+        /// AES解密
+        /// </summary>
+        /// <param name="text">加密字符串</param>
+        /// <param name="key">秘钥</param>
+        /// <param name="iv">加密辅助向量</param>
+        /// <returns>明文</returns>
+        public static string Decrypt(string text, string key, string iv)
         {
-            using (Aes aes = Aes.Create())
-            {
-                aes.Key = key;
-                aes.IV = iv;
-                aes.Mode = CipherMode.CBC;
-                aes.Padding = PaddingMode.PKCS7;
-
-                using (MemoryStream ms = new MemoryStream(Text))
-                {
-                    using (ICryptoTransform decryptor = aes.CreateDecryptor())
-                    {
-                        using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
-                        {
-                            byte[] result = new byte[Text.Length];
-                            int count = cs.Read(result, 0, result.Length);
-                            byte[] res = new byte[count];
-                            Array.Copy(result, res, count);
-                            return res;
-                        }
-                    }
-                }
-            }
+            RijndaelManaged rijndaelCipher = new RijndaelManaged();
+            rijndaelCipher.Mode = CipherMode.CBC;
+            rijndaelCipher.Padding = PaddingMode.PKCS7;
+            rijndaelCipher.KeySize = 128;
+            rijndaelCipher.BlockSize = 128;
+            byte[] encryptedData = Convert.FromBase64String(text);
+            byte[] pwdBytes = System.Text.Encoding.UTF8.GetBytes(key);
+            byte[] keyBytes = new byte[16];
+            int len = pwdBytes.Length;
+            if (len > keyBytes.Length) len = keyBytes.Length;
+            System.Array.Copy(pwdBytes, keyBytes, len);
+            rijndaelCipher.Key = keyBytes;
+            byte[] ivBytes = System.Text.Encoding.UTF8.GetBytes(iv);
+            rijndaelCipher.IV = ivBytes;
+            ICryptoTransform transform = rijndaelCipher.CreateDecryptor();
+            byte[] plainText = transform.TransformFinalBlock(encryptedData, 0, encryptedData.Length);
+            return Encoding.UTF8.GetString(plainText);
         }
 
-        #endregion 
     }
 }
