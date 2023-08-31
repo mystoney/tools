@@ -291,8 +291,8 @@ namespace MonitorAndControl
         {
 
             if (tb_ServiceName.Text.ToString().Trim() == "" || tb_ServiceName.Text.ToString().Trim() == string.Empty) { MessageBox.Show("请输入服务名称"); return; }
-            
-            InputPassWord inputPassWord= new InputPassWord();
+            string hosts=tb_ServerIP.Text.Trim();
+            InputPassWord inputPassWord= new InputPassWord(hosts);
             inputPassWord.ShowDialog();
             if (inputPassWord.DialogResult != DialogResult.OK)
             {

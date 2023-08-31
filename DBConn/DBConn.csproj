@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllConn.cs" />
+    <Compile Include="DBUtility\AESEncrypt.cs" />
     <Compile Include="OdbcConn.cs" />
     <Compile Include="OleConn.cs" />
     <Compile Include="SqlConn.cs" />

@@ -1,7 +1,9 @@
 ﻿using Azure.Core;
 using Mono.Unix.Native;
+using MyContrals;
 using Python.Runtime;
 using Renci.SshNet.Messages;
+using Renci.SshNet.Security;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,12 +21,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using TX.Framework.DataContract;
 using TX.Framework.Helper;
 using TX.Framework.Security.Base;
 using static IronPython.Modules._ast;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Security.Cryptography;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 
@@ -41,13 +45,18 @@ namespace MonitorAndControl
         #region Windows服务
         public Win32ServiceManager(string host, string userName, string password)
         {    
+            
             this.strPath = "\\\\" + host + "\\root\\cimv2:Win32_Service";
             this.managementClass = new ManagementClass(strPath);
+            string key=System.Text.RegularExpressions.Regex.Replace(host, @"[^0-9]+", "");
             if (userName != null && userName.Length > 0)
             {
                 ConnectionOptions connectionOptions = new ConnectionOptions();
-                connectionOptions.Username = DBCon.DBUtility.DESEncrypt.Decrypt(userName);
-                connectionOptions.Password = DBCon.DBUtility.DESEncrypt.Decrypt(password);
+                
+                connectionOptions.Username = DBCon.DBUtility.DESEncrypt.Decrypt(userName, key);
+                connectionOptions.Password = DBCon.DBUtility.DESEncrypt.Decrypt(password, key);
+
+                
                 ManagementScope managementScope = new ManagementScope("\\\\" + host + "\\root\\cimv2", connectionOptions);
                 this.managementClass.Scope = managementScope;
             }
@@ -55,9 +64,11 @@ namespace MonitorAndControl
         // 验证是否能连接到远程计算机
         public static bool RemoteConnectValidate(string host, string userName, string password)
         {
+            string key = System.Text.RegularExpressions.Regex.Replace(host, @"[^0-9]+", "");
             ConnectionOptions connectionOptions = new ConnectionOptions();
-            connectionOptions.Username = DBCon.DBUtility.DESEncrypt.Decrypt(userName); ;
-            connectionOptions.Password = DBCon.DBUtility.DESEncrypt.Decrypt(password);
+            
+            connectionOptions.Username = DBCon.DBUtility.DESEncrypt.Decrypt(userName, key);
+            connectionOptions.Password = DBCon.DBUtility.DESEncrypt.Decrypt(password, key);
             ManagementScope managementScope = new ManagementScope("" + host + "//root//cimv2", connectionOptions);
             try
             {
@@ -708,8 +719,10 @@ namespace MonitorAndControl
         /// <returns></returns>
         public List<ServerCheckItem> GetItem()
         {
+            
             string cmd = "select Service_ServerList.id as ServerID, Service_ServerList.ServerIP,Service_ServerList.CheckType,Service_ServerList.SvrUser,Service_ServerList.SvrPwd,Service_ServerList.CheckItem,Inactive,PriorityLevel,TestInterval,CheckResult,case  when ExecutionTime is NULL then  '2023-01-01 00:00:00.000' else ExecutionTime end as ExecutionTime,ExecutionComputer ,ExecutionIP,ResultSource  \r\nfrom Service_ServerList left join  (select * from(SELECT ROW_NUMBER() over(partition by serverlistid order by id desc) as rowNum ,[ServerListID],[ServerIP],[CheckType],[CheckItem],[CheckResult],[ExecutionTime],[ExecutionComputer],[ExecutionIP],[ResultSource] FROM Service_Record) temp\r\nwhere temp.rowNum = 1) a on Service_ServerList.id = a.ServerListID where inactive=1 order by serverip,checktype,prioritylevel";
             DataTable dt= DBConn.DataAcess.SqlConn.Query(cmd).Tables[0];
+            
             List<ServerCheckItem> serverCheckItems = new List<ServerCheckItem>();
             if (dt.Rows.Count> 0)
             {   
@@ -1009,9 +1022,11 @@ namespace MonitorAndControl
 
             string disksrc = _disksrc + ":";//"D:";
 
-            string username = DBCon.DBUtility.DESEncrypt.Decrypt(_username.Trim());//"Administrator"; //
+            string key = System.Text.RegularExpressions.Regex.Replace(_ip, @"[^0-9]+", "");
 
-            string password = DBCon.DBUtility.DESEncrypt.Decrypt(_password.Trim());//"password";
+            string username = DBCon.DBUtility.DESEncrypt.Decrypt(_username.Trim(), key);//"Administrator"; //
+
+            string password = DBCon.DBUtility.DESEncrypt.Decrypt(_password.Trim(), key);//"password";
 
             int threshold = Convert.ToInt16(_threshold);
 
@@ -1125,8 +1140,9 @@ namespace MonitorAndControl
         public string LinuxGetServicesInfo(string _hostname, int _port, string _username, string _password, string _ServiceName)
         {
             string a = "";
-            string username = DBCon.DBUtility.DESEncrypt.Decrypt(_username);
-            string password = DBCon.DBUtility.DESEncrypt.Decrypt(_password);
+            string key = System.Text.RegularExpressions.Regex.Replace(_hostname, @"[^0-9]+", "");
+            string username = DBCon.DBUtility.DESEncrypt.Decrypt(_username,key);
+            string password = DBCon.DBUtility.DESEncrypt.Decrypt(_password, key);
 
             using (var client = new Renci.SshNet.SshClient(_hostname, _port, username, password))
             {
@@ -1229,7 +1245,7 @@ namespace MonitorAndControl
 
         public DiskInfo LinuxGetFolderDiskInfo(string hostname, int port, string username, string password, string path)
         {
-            using (var client = new Renci.SshNet.SshClient(hostname, port, DBCon.DBUtility.DESEncrypt.Decrypt(username), DBCon.DBUtility.DESEncrypt.Decrypt(password)))
+            using (var client = new Renci.SshNet.SshClient(hostname, port, DBCon.DBUtility.DESEncrypt.Decrypt(username, System.Text.RegularExpressions.Regex.Replace(hostname, @"[^0-9]+", "")), DBCon.DBUtility.DESEncrypt.Decrypt(password, System.Text.RegularExpressions.Regex.Replace(hostname, @"[^0-9]+", ""))))
             {
                 // 连接到 SSH 服务器
                 client.Connect();
@@ -1312,12 +1328,37 @@ namespace MonitorAndControl
                 // 取得输出流
                 StreamReader reader = new StreamReader(response.GetResponseStream());
                 a = reader.ReadToEnd();
-                //Console.WriteLine(reader.ReadToEnd());
 
+                JavaScriptSerializer js = new JavaScriptSerializer();   //实例化一个能够序列化数据的类
+
+                Joke list = js.Deserialize<Joke>(a);    //将json数据转化为对象类型并赋值给list
+                string msg = list.msg;
+                string sign = list.sign;
+                string b = DBCon.DBUtility.a
             }
             return a;
-        }
 
+
+            
+                            //{ "msg":"efcf72a487f9855214d40286e7eef451399d8d0b4e8c10394bf508d1b83a4d4c1df069e769851d06edd2c54b094388e810b131f47c853807ef578bd097cc69ecc8fbd8e5b80c6095fa06030f47036fdb929e73c428f530b7751bc66d9eb99bc035a0006af81eb3d2e08774d549","sign":"dc3479ff294fbb89de0beeb38747636f"}
+                            
+                            //用这个 md5(msg+aes_iv)就能算出签名，和返回的sign比一比是不是一样
+                            //如果是一样，就用AES解密msg，就能得到原文了
+                            //AES256，密钥和向量刚发给你了，我再发一遍
+                            //aes_key = '5a75d5ec839a8f1ed686f0ddb67d5f09'
+                            //aes_iv = 'f244ef6f0accec87'
+                            //md5(Stoney)
+                            //向量是md5(Yves)的前16位
+
+        }
+        public class Joke
+        {
+            public string msg { get; set; }
+
+            public string sign { get; set; }
+            
+        }
+     
         #endregion
 
     }

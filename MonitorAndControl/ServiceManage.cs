@@ -30,7 +30,7 @@ namespace MonitorAndControl
             txb_State.Text = "";
             ServerIP = combo_ServerIP.Text.ToString();
             ServiceName = combo_ServiceName_User.Text.ToString().Trim();
-            InputPassWord ps = new InputPassWord();
+            InputPassWord ps = new InputPassWord(ServerIP);
             ps.ShowDialog();
             if (ps.DialogResult != DialogResult.OK) { MessageBox.Show("请重新输入密码"); return; }
             string SvrUser = ps.stringUsername;

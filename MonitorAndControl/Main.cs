@@ -13,6 +13,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using static MonitorAndControl.Win32ServiceManager;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -49,6 +50,9 @@ namespace MonitorAndControl
 
         private void Main_Load(object sender, EventArgs e)
         {
+           string a = DBCon.DBUtility.DESEncrypt.Encrypt("root", "123");
+           string b = DBCon.DBUtility.DESEncrypt.Encrypt("root", "321");
+
             working = false;
             timer1.Enabled = true;
             timer1.Interval = 5*60000; //设置时间间隔（毫秒为单位）单位Ms
@@ -774,8 +778,8 @@ namespace MonitorAndControl
             InputPassWord ps = new InputPassWord();
             ps.ShowDialog();
             if (ps.DialogResult != DialogResult.OK) { MessageBox.Show("请重新输入密码"); return; }            
-            Clipboard.SetText(ps.stringPassword);
-            MessageBox.Show("密码已复制到剪切板，请继续");            
+            //Clipboard.SetText(ps.stringPassword);
+            //MessageBox.Show("密码已复制到剪切板，请继续");            
         }
 
         private void 访问linuxToolStripMenuItem_Click(object sender, EventArgs e)
@@ -788,6 +792,13 @@ namespace MonitorAndControl
             //string a=wsm.LinuxGetServicesInfo("172.16.1.99", 2263, "root", "Rainoo5683@", "mysql");
 
             string Joke = wsm.GetJoke();
+        }
+
+        private void getJokeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Win32ServiceManager wsm = new Win32ServiceManager();
+
+            string b = wsm.GetJoke();
         }
     }
 }

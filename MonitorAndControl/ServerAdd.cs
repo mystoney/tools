@@ -53,7 +53,7 @@ namespace MonitorAndControl
                     MessageBox.Show(s);
                     return;
                 }
-                InputPassWord ps = new InputPassWord();
+                InputPassWord ps = new InputPassWord(ServerIP);
                 ps.ShowDialog();
                 if (ps.DialogResult != DialogResult.OK) { MessageBox.Show("请重新输入密码"); return; }
                 string username = ps.stringUsername;

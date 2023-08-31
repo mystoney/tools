@@ -87,6 +87,7 @@ namespace DBCon.DBUtility
         /// <returns></returns> 
         public static string Decrypt(string Text, string sKey)
         {
+            
             DESCryptoServiceProvider des = new DESCryptoServiceProvider();
             int len;
             len = Text.Length / 2;

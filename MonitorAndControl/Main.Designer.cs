@@ -55,6 +55,7 @@ namespace MonitorAndControl
             this.DGMAIN = new MyContrals.ExDataGridView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.getJokeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -150,7 +151,8 @@ namespace MonitorAndControl
             this.新增ToolStripMenuItem,
             this.不朽ToolStripMenuItem,
             this.加密ToolStripMenuItem,
-            this.访问linuxToolStripMenuItem});
+            this.访问linuxToolStripMenuItem,
+            this.getJokeToolStripMenuItem});
             this.测试ToolStripMenuItem.Name = "测试ToolStripMenuItem";
             this.测试ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.测试ToolStripMenuItem.Text = "测试";
@@ -277,6 +279,13 @@ namespace MonitorAndControl
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
             // 
+            // getJokeToolStripMenuItem
+            // 
+            this.getJokeToolStripMenuItem.Name = "getJokeToolStripMenuItem";
+            this.getJokeToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.getJokeToolStripMenuItem.Text = "GetJoke()";
+            this.getJokeToolStripMenuItem.Click += new System.EventHandler(this.getJokeToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -331,5 +340,6 @@ namespace MonitorAndControl
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ToolStripMenuItem 加密ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 访问linuxToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem getJokeToolStripMenuItem;
     }
 }
