@@ -1,6 +1,7 @@
 ﻿using email;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.Win32.TaskScheduler;
+using Renci.SshNet.Security;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,6 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using System.Win32;
 using System.Windows.Forms;
 using static MonitorAndControl.Win32ServiceManager;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -797,8 +799,12 @@ namespace MonitorAndControl
         private void getJokeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Win32ServiceManager wsm = new Win32ServiceManager();
+            //string a = wsm.GetJoke();
+            string msg = DBConn.DBUtility. "443eb1614f2f4188fe49e6127a3901";
+            string key = "5a75d5ec839a8f1ed686f0ddb67d5f09";
+            string iv = "f244ef6f0accec87";
+            string b = DBConn.DBUtility.AESEncrypt.AesDecrypt(msg, key, iv);
 
-            string b = wsm.GetJoke();
         }
     }
 }

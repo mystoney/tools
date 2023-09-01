@@ -28,10 +28,13 @@ using TX.Framework.Helper;
 using TX.Framework.Security.Base;
 using static IronPython.Modules._ast;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Security.Cryptography;
+
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using IronPython.Runtime;
-
+using Newtonsoft.Json.Linq;
+using System.Web;
+using System.Collections.Specialized;
+using System.Runtime.Remoting.Messaging;
 
 namespace MonitorAndControl
 {
@@ -1313,53 +1316,180 @@ namespace MonitorAndControl
 
 
         #region HTTP
+        private string GetUrlHtml(string url)//
+        {
+            HttpWebRequest request = null;
+            HttpWebResponse response = null;
+            string strHtml = string.Empty;
+            string strHtml_1 = string.Empty;
+            string strHtml_1_1 = string.Empty;
+            System.Net.ServicePointManager.DefaultConnectionLimit = 50;
+            Stream respStream, respStream_1;
+            StreamReader str, str_1;
+            try
+            {
+                request = (HttpWebRequest)WebRequest.Create(url);
+                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0";//用户代理
+                request.AllowAutoRedirect = false;//设置不自动跳转
+                request.Method = "GET";
+                request.KeepAlive = false;
+                request.Timeout = 10000;
+                response = (HttpWebResponse)request.GetResponse();//从Internet资源返回数据流
+                response.GetResponseHeader("Location");
+                if (response.CharacterSet.ToLower().Trim() != "")
+                {
+
+                    switch (response.CharacterSet.ToLower())
+                    {
+                        case "gbk":
+                            respStream = response.GetResponseStream();//读取数据流
+                            str = new StreamReader(respStream, System.Text.Encoding.Default);//读取数据
+                            strHtml_1 = str.ReadToEnd().ToString().Trim();
+                            respStream.Close();
+                            response.Close();
+                            str.Close();
+                            break;
+                        case "gb2312":
+                            respStream = response.GetResponseStream();//读取数据流
+                            str = new StreamReader(respStream, System.Text.Encoding.Default);//读取数据
+                            strHtml_1 = str.ReadToEnd().ToString().Trim();
+                            respStream.Close();
+                            response.Close();
+                            str.Close();
+                            break;
+                        case "utf-8":
+                            respStream = response.GetResponseStream();//读取数据流
+                            str = new StreamReader(respStream, System.Text.Encoding.UTF8);//读取数据
+                            strHtml_1 = str.ReadToEnd().ToString().Trim();
+                            respStream.Close();
+                            response.Close();
+                            str.Close();
+                            break;
+                        case "iso-8859-1":
+                            respStream_1 = response.GetResponseStream();//读取数据流
+                            str_1 = new StreamReader(respStream_1, System.Text.Encoding.Default);//读取数据
+                            strHtml_1_1 = str_1.ReadToEnd().ToString().Trim();
+                            strHtml_1 = strHtml_1_1.Replace("UTF", "utf");
+                            if (strHtml_1.IndexOf("text/html; charset=utf-8") > 0 || strHtml_1.IndexOf("text/html;charset=utf-8") > 0 || strHtml_1.IndexOf("meta charset=\"utf-8\"") > 0) //<script的位置    
+                            {
+                                request = (HttpWebRequest)WebRequest.Create(url);
+                                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0";//用户代理
+                                request.AllowAutoRedirect = false;//设置不自动跳转
+                                request.Method = "GET";
+                                request.KeepAlive = false;
+                                request.Timeout = 10000;
+                                response = (HttpWebResponse)request.GetResponse();//从Internet资源返回数据流
+                                response.GetResponseHeader("Location");
+                                respStream = response.GetResponseStream();//读取数据流
+                                str = new StreamReader(respStream, System.Text.Encoding.UTF8);//读取数据
+                                strHtml_1 = str.ReadToEnd().ToString().Trim();
+                            }
+                            else
+                            {
+                                request = (HttpWebRequest)WebRequest.Create(url);
+                                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0";//用户代理
+                                request.AllowAutoRedirect = false;//设置不自动跳转
+                                request.Method = "GET";
+                                request.KeepAlive = false;
+                                request.Timeout = 10000;
+                                response = (HttpWebResponse)request.GetResponse();//从Internet资源返回数据流
+                                response.GetResponseHeader("Location");
+                                respStream = response.GetResponseStream();//读取数据流
+                                str = new StreamReader(respStream, System.Text.Encoding.Default);//读取数据
+                                strHtml_1 = str.ReadToEnd().ToString().Trim();
+                            }
+                            strHtml_1_1 = string.Empty;
+                            respStream_1.Close();
+                            respStream_1.Dispose();
+                            str_1.Close();
+                            respStream.Close();
+                            respStream.Dispose();
+                            response.Close();
+                            str.Close();
+                            break;
+                        default:
+                            respStream = response.GetResponseStream();//读取数据流
+                            str = new StreamReader(respStream, System.Text.Encoding.UTF8);//读取数据
+                            strHtml_1 = str.ReadToEnd().ToString().Trim();
+                            respStream.Close();
+                            response.Close();
+                            str.Close();
+                            break;
+                    }
+                }
+            }
+            catch (Exception e1)
+            {
+                MessageBox.Show(e1.ToString());
+                strHtml = "连接不上服务器！";
+            }
+            return strHtml;
+        }
+
+
+
         /// <summary>
         /// 调取笑话
         /// </summary>
         /// <returns></returns>
         public string GetJoke()
         {
+
             string resultstr = "";
-            // 创建一个Web请求
-            HttpWebRequest request = WebRequest.Create("http://kr1.sickkle.com/joke") as HttpWebRequest;
-
-            // 获取Web服务器输出的数据
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                // 取得输出流
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-                string a = reader.ReadToEnd();
-
-                
+            //// 创建一个Web请求
+            //HttpWebRequest request = WebRequest.Create("http://kr1.sickkle.com/joke") as HttpWebRequest;
 
 
-                JavaScriptSerializer js = new JavaScriptSerializer();   //实例化一个能够序列化数据的类
 
-                Joke list = js.Deserialize<Joke>(a);    //将json数据转化为对象类型并赋值给list
-                string msg = list.msg;
-                string sign = list.sign;
-                byte[] Text = System.Text.Encoding.Default.GetBytes(msg);
-                byte[] key = System.Text.Encoding.Default.GetBytes("5a75d5ec839a8f1ed686f0ddb67d5f09");
-                byte[] iv = System.Text.Encoding.Default.GetBytes("f244ef6f0accec87");
-                byte[] b = DBConn.DBUtility.AESEncrypt.Decrypt(a, "5a75d5ec839a8f1ed686f0ddb67d5f09", "f244ef6f0accec87");
-                resultstr = System.Text.Encoding.Default.GetString(b);
+
+            //// 获取Web服务器输出的数据
+            //using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            //{
+                //// 取得输出流
+                //StreamReader reader = new StreamReader(response.GetResponseStream());
+                //string a = reader.ReadToEnd();
+
+
+
+
+                //JavaScriptSerializer js = new JavaScriptSerializer();   //实例化一个能够序列化数据的类
+
+                //Joke list = js.Deserialize<Joke>(a);    //将json数据转化为对象类型并赋值给list
+                ////string msg = list.msg;
+                //string msg = "443eb1614f2f4188fe49e6127a3901";
+                //string sign = list.sign;
+                //string key = "5a75d5ec839a8f1ed686f0ddb67d5f09";
+                //string iv = "f244ef6f0accec87";
+                //byte[] msg1 = Convert.FromBase64String(msg);
+                //byte[] key1 = System.Text.Encoding.Default.GetBytes(key);
+                //byte[] iv1 = System.Text.Encoding.Default.GetBytes(iv);
+                ////byte[] iv1 = System.Text.Encoding.Default.GetBytes(iv);
+
+
+                //string sign1 = DBConn.DBUtility.MD5Helper.md5(msg + iv);
+                //if (sign1 == sign)
+                //{                    
+                //   //string b = DBConn.DBUtility.AESEncrypt.DecryptAES256(msg,key,iv);
+                //}                
+                //resultstr = msg;
+                return resultstr;
+
+
+
+                //{ "msg":"efcf72a487f9855214d40286e7eef451399d8d0b4e8c10394bf508d1b83a4d4c1df069e769851d06edd2c54b094388e810b131f47c853807ef578bd097cc69ecc8fbd8e5b80c6095fa06030f47036fdb929e73c428f530b7751bc66d9eb99bc035a0006af81eb3d2e08774d549","sign":"dc3479ff294fbb89de0beeb38747636f"}
+
+                //用这个 md5(msg+aes_iv)就能算出签名，和返回的sign比一比是不是一样
+                //如果是一样，就用AES解密msg，就能得到原文了
+                //AES256，密钥和向量刚发给你了，我再发一遍
+                //aes_key = '5a75d5ec839a8f1ed686f0ddb67d5f09'
+                //aes_iv = 'f244ef6f0accec87'
+                //md5(Stoney)
+                //向量是md5(Yves)的前16位
+
             }
-            return resultstr;
-
-
-            
-                            //{ "msg":"efcf72a487f9855214d40286e7eef451399d8d0b4e8c10394bf508d1b83a4d4c1df069e769851d06edd2c54b094388e810b131f47c853807ef578bd097cc69ecc8fbd8e5b80c6095fa06030f47036fdb929e73c428f530b7751bc66d9eb99bc035a0006af81eb3d2e08774d549","sign":"dc3479ff294fbb89de0beeb38747636f"}
-                            
-                            //用这个 md5(msg+aes_iv)就能算出签名，和返回的sign比一比是不是一样
-                            //如果是一样，就用AES解密msg，就能得到原文了
-                            //AES256，密钥和向量刚发给你了，我再发一遍
-                            //aes_key = '5a75d5ec839a8f1ed686f0ddb67d5f09'
-                            //aes_iv = 'f244ef6f0accec87'
-                            //md5(Stoney)
-                            //向量是md5(Yves)的前16位
-
         }
-  
+
+
         public class Joke
         {
             public string msg { get; set; }
@@ -1375,6 +1505,7 @@ namespace MonitorAndControl
 
 
 
-}
+
+
 
 
