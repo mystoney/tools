@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,146 +13,208 @@ namespace DBConn.DBUtility
 {
     public class AESEncrypt
     {
-        public AESEncrypt()
-        {
-
-        }
-        //AES加密
-        public static string AesEncrypt(string value, string key, string iv = "")
-        {
-            if (string.IsNullOrEmpty(value)) return string.Empty;
-            if (key == null) throw new Exception("未将对象引用设置到对象的实例。");
-            if (key.Length < 16) throw new Exception("指定的密钥长度不能少于16位。");
-            if (key.Length > 32) throw new Exception("指定的密钥长度不能多于32位。");
-            if (key.Length != 16 && key.Length != 24 && key.Length != 32) throw new Exception("指定的密钥长度不明确。");
-            if (!string.IsNullOrEmpty(iv))
+            /// <summary>
+            /// AES加密
+            /// </summary>
+            /// <param name="aesModel"></param>
+            /// <returns></returns>
+            public static byte[] Encrypt(AesModel aesModel)
             {
-                if (iv.Length < 16) throw new Exception("指定的向量长度不能少于16位。");
-            }
+                //使用32位密钥
+                byte[] key32 = new byte[32];
+                //如果我们的密钥不是32为，则自动补全到32位
+                byte[] byteKey = Encoding.UTF8.GetBytes(aesModel.Key.PadRight(key32.Length));
+                //复制密钥
+                Array.Copy(byteKey, key32, key32.Length);
 
-            var _keyByte = Encoding.UTF8.GetBytes(key);
-            var _valueByte = Encoding.UTF8.GetBytes(value);
-            using (var aes = new RijndaelManaged())
-            {
-                aes.IV = !string.IsNullOrEmpty(iv) ? Encoding.UTF8.GetBytes(iv) : Encoding.UTF8.GetBytes(key.Substring(0, 16));
-                aes.Key = _keyByte;
-                aes.Mode = CipherMode.CBC;
-                aes.Padding = PaddingMode.PKCS7;
-                var cryptoTransform = aes.CreateEncryptor();
-                var resultArray = cryptoTransform.TransformFinalBlock(_valueByte, 0, _valueByte.Length);
-                return Convert.ToBase64String(resultArray, 0, resultArray.Length);
-            }
-        }
+                //使用16位向量
+                byte[] iv16 = new byte[16];
+                //如果我们的向量不是16为，则自动补全到16位
+                byte[] byteIv = Encoding.UTF8.GetBytes(aesModel.IV.PadRight(iv16.Length));
+                //复制向量
+                Array.Copy(byteIv, iv16, iv16.Length);
 
-        //AES解密
-        public static string AesDecrypt(string value, string key, string iv)
-        {
-            //string avalue = "edff48a59bea845b2edb0d9de5dcfe501a26b686f6606f59b3b2880adae1d28bac794829cb458d08c41cecf6a50604c0b9de64b34b8461163d7922b2f66ba569";
-            if (string.IsNullOrEmpty(value)) return string.Empty;
-            if (key == null) throw new Exception("未将对象引用设置到对象的实例。");
-            if (key.Length < 16) throw new Exception("指定的密钥长度不能少于16位。");
-            if (key.Length > 32) throw new Exception("指定的密钥长度不能多于32位。");
-            if (key.Length != 16 && key.Length != 24 && key.Length != 32) throw new Exception("指定的密钥长度不明确。");
-            if (!string.IsNullOrEmpty(iv))
-            {
-                if (iv.Length < 16) throw new Exception("指定的向量长度不能少于16位。");
-            }
-
-            var _keyByte = Encoding.UTF8.GetBytes(key);
-            var _valueByte = Convert.(value);
-            //var _valueByte = Encoding.UTF8.GetBytes(value);
-            using (var aes = new RijndaelManaged())
-            {
-                aes.IV = !string.IsNullOrEmpty(iv) ? Encoding.UTF8.GetBytes(iv) : Encoding.UTF8.GetBytes(key.Substring(0, 16));
-                aes.Key = _keyByte;
-                aes.Mode = CipherMode.CFB;
-                aes.Padding = PaddingMode.PKCS7;
-                aes.KeySize = 256;
-                aes.BlockSize = 24;
-                var cryptoTransform = aes.CreateDecryptor();
-                var resultArray = cryptoTransform.TransformFinalBlock(_valueByte, 0, _valueByte.Length);
-                return Encoding.UTF8.GetString(resultArray);
-            }
-        }
-        //使用AES256解密字符串
-        public static string DecryptAES256(string encryptedText, string key, string iv)
-        {
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = Encoding.UTF8.GetBytes(key);
-                aesAlg.IV = Encoding.UTF8.GetBytes(iv);
-
-
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
-                byte[] encryptedBytes = Convert.FromBase64String(encryptedText);
-
-                using (MemoryStream msDecrypt = new MemoryStream(encryptedBytes))
-                using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                // 创建加密对象,Rijndael 算法
+                //Rijndael RijndaelAes = Rijndael.Create();
+                RijndaelManaged RijndaelAes = new RijndaelManaged();
+                RijndaelAes.Mode = aesModel.Mode;
+                RijndaelAes.Padding = aesModel.Padding;
+                RijndaelAes.Key = key32;
+                RijndaelAes.IV = iv16;
+                byte[] result = null;
+                try
                 {
-                    return srDecrypt.ReadToEnd();
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        using (CryptoStream EncryptStream = new CryptoStream(ms, RijndaelAes.CreateEncryptor(), CryptoStreamMode.Write))
+                        {
+                            EncryptStream.Write(aesModel.Data, 0, aesModel.Data.Length);
+                            EncryptStream.FlushFinalBlock();
+                            result = ms.ToArray();
+                        }
+                    }
                 }
+                catch { }
+                return result;
             }
+
+            /// <summary>
+            /// AES解密
+            /// </summary>
+            /// <param name="aesModel"></param>
+            /// <returns></returns>
+            public static byte[] Decrypt(AesModel aesModel)
+            {
+                //使用32位密钥
+                byte[] key32 = new byte[32];
+                //如果我们的密钥不是32为，则自动补全到32位
+                byte[] byteKey = Encoding.UTF8.GetBytes(aesModel.Key.PadRight(key32.Length));
+                //复制密钥
+                Array.Copy(byteKey, key32, key32.Length);
+
+                //使用16位向量
+                byte[] iv16 = new byte[16];
+                //如果我们的向量不是16为，则自动补全到16位
+                byte[] byteIv = Encoding.UTF8.GetBytes(aesModel.IV.PadRight(iv16.Length));
+                //复制向量
+                Array.Copy(byteIv, iv16, iv16.Length);
+
+                // 创建解密对象,Rijndael 算法
+                //Rijndael RijndaelAes = Rijndael.Create();
+                RijndaelManaged RijndaelAes = new RijndaelManaged();
+                RijndaelAes.Mode = aesModel.Mode;
+                RijndaelAes.Padding = aesModel.Padding;
+                RijndaelAes.Key = key32;
+                RijndaelAes.IV = iv16;
+                byte[] result = null;
+                try
+                {
+                    using (MemoryStream ms = new MemoryStream(aesModel.Data))
+                    {
+                        using (CryptoStream DecryptStream = new CryptoStream(ms, RijndaelAes.CreateDecryptor(), CryptoStreamMode.Read))
+                        {
+                            using (MemoryStream msResult = new MemoryStream())
+                            {
+                                byte[] temp = new byte[1024 * 1024];
+                                int len = 0;
+                                while ((len = DecryptStream.Read(temp, 0, temp.Length)) > 0)
+                                {
+                                    msResult.Write(temp, 0, len);
+                                }
+
+                                result = msResult.ToArray();
+                            }
+                        }
+                    }
+                }
+                catch { }
+                return result;
+            }
+
+            /// <summary>
+            /// AES加密字符串
+            /// </summary>
+            /// <param name="data"></param>
+            /// <param name="key"></param>
+            /// <param name="iv"></param>
+            /// <returns></returns>
+            public static string Encrypt(string data, string key, string iv = "")
+            {
+                
+                byte[] bytes = Encoding.UTF8.GetBytes(data);
+                byte[] result = Encrypt(new AesModel
+                {
+                    Data = bytes,
+                    Key = key,
+                    IV = iv,
+                    Mode = CipherMode.CFB,
+                    Padding = PaddingMode.PKCS7
+                });
+                if (result == null)
+                {
+                    return "";
+                }
+                return Convert.ToBase64String(result);
+            }
+
+            /// <summary>
+            /// AES解密字符串
+            /// </summary>
+            /// <param name="data"></param>
+            /// <param name="key"></param>
+            /// <param name="iv"></param>
+            /// <returns></returns>
+            public static string Decrypt(string data, string key, string iv = "")
+            {
+                
+
+                byte[] bytes = Convert.FromBase64String(data);
+                byte[] result = Decrypt(new AesModel
+                {
+                    Data = bytes,
+                    Key = key,
+                    IV = iv,
+                    Mode = CipherMode.CFB,
+                    Padding = PaddingMode.PKCS7
+                });
+                if (result == null)
+                {
+                    return "";
+                }
+                return Encoding.UTF8.GetString(result);
+            }
+
+        /// <summary>
+        /// 自定义Base16编码
+        /// </summary>
+        /// <param name="str">需要编码的字符串</param>
+        /// <param name="autoCode">自定义Base16编码数组,16个元素,可以为数字、字符、特殊符号,若不填,使用默认的Base16编码数组,解码与编码的Base16编码数组一样</param>
+        /// <returns></returns>
+        public static string AutoBase16Encrypt(string str, string[] autoCode)
+        {
+            string innerStr = string.Empty;
+            StringBuilder strEn = new StringBuilder();
+            if (autoCode == null || autoCode.Length < 16)
+                autoCode = new string[] { "a", "2", "B", "g", "E", "5", "f", "6", "C", "8", "o", "9", "Z", "p", "k", "M" };
+            System.Collections.ArrayList arr = new System.Collections.ArrayList(System.Text.Encoding.Default.GetBytes(str));
+            for (int i = 0; i < arr.Count; i++)
+            {
+                byte data = (byte)arr[i];
+                int v1 = data >> 4;
+                strEn.Append(autoCode[v1]);
+                int v2 = ((data & 0x0f) << 4) >> 4;
+                strEn.Append(autoCode[v2]);
+            }
+            return strEn.ToString();
         }
 
+        public class AesModel
+        {
+            /// <summary>
+            /// 需要加密/解密的数据
+            /// </summary>
+            public byte[] Data { get; set; }
 
+            /// <summary>
+            /// 密钥
+            /// </summary>
+            public string Key { get; set; }
 
-        //private byte[] aesKey;
-        //private byte[] aesIV;
+            /// <summary>
+            /// 向量
+            /// </summary>
+            public string IV { get; set; }
 
-        //public void DecryptionService(string aesKeyHex, string aesIVHex)
-        //{
-        //    aesKey = HexToByteArray(aesKeyHex);
-        //    aesIV = HexToByteArray(aesIVHex);
-        //}
+            /// <summary>
+            /// 加密模式
+            /// </summary>
+            public CipherMode Mode { get; set; }
 
-        //public static string AESDecrypt(string encryptedHex, byte[] aesKey, byte[] aesIV)
-        //{
-        //    byte[] encryptedBytes = System.Text.Encoding.Default.GetBytes("efcf72a487f9855214d40286e7eef451399d8d0b4e8c10394bf508d1b83a4d4c1df069e769851d06edd2c54b094388e810b131f47c853807ef578bd097cc69ecc8fbd8e5b80c6095fa06030f47036fdb929e73c428f530b7751bc66d9eb99bc035a0006af81eb3d2e08774d549");
+            /// <summary>
+            /// 填充模式
+            /// </summary>
+            public PaddingMode Padding { get; set; }
+        }
 
-        //    //string key = "5a75d5ec839a8f1ed686f0ddb67d5f09";
-        //    //string iv = "f244ef6f0accec87";
-        //    //byte[] key1 = System.Text.Encoding.Default.GetBytes(key);
-        //    //byte[] iv1 = System.Text.Encoding.Default.GetBytes(iv);
-
-
-        //    using (Aes aesAlg = Aes.Create())
-        //    {
-        //        aesAlg.Key = aesKey;
-        //        aesAlg.IV = aesIV;
-        //        aesAlg.Mode = CipherMode.CFB; // CFB模式
-        //        aesAlg.Padding = PaddingMode.PKCS7; // 使用PKCS7填充
-
-        //        using (ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV))
-        //        using (MemoryStream msDecrypt = new MemoryStream(encryptedBytes))
-        //        using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-        //        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-        //        {
-        //            string decryptedText = srDecrypt.ReadToEnd();
-        //            return decryptedText;
-        //        }
-        //    }
-        //}
-
-        //public static byte[] HexToByteArray(string hex)
-        //{
-        //    int byteCount = hex.Length / 2;
-        //    byte[] byteArray = new byte[byteCount];
-
-        //    for (int i = 0; i < byteCount; i++)
-        //    {
-        //        byteArray[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
-        //    }
-
-        //    return byteArray;
-        //}
-
-
-
-
-
-
-
-    }
+    }    
 }

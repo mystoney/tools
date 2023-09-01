@@ -1,6 +1,9 @@
 ﻿using email;
+using IronPython.Runtime.Exceptions;
 using Microsoft.Office.Interop.Excel;
+using Microsoft.Scripting.Utils;
 using Microsoft.Win32.TaskScheduler;
+using Org.BouncyCastle.Utilities.Encoders;
 using Renci.SshNet.Security;
 using System;
 using System.Collections.Generic;
@@ -11,13 +14,18 @@ using System.IO;
 using System.Management;
 using System.Net;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Win32;
 using System.Windows.Forms;
+using TX.Framework.Helper;
+using static DBConn.DBUtility.AESEncrypt;
+using static IronPython.Modules._ast;
 using static MonitorAndControl.Win32ServiceManager;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Action = System.Action;
 
@@ -29,7 +37,7 @@ namespace MonitorAndControl
 
         private TProcess m_process;
 
-        
+
         /// <summary>
         /// 连续5次(1/4小时)没有报错就发送一个笑话
         /// </summary>
@@ -52,12 +60,12 @@ namespace MonitorAndControl
 
         private void Main_Load(object sender, EventArgs e)
         {
-           string a = DBCon.DBUtility.DESEncrypt.Encrypt("root", "123");
-           string b = DBCon.DBUtility.DESEncrypt.Encrypt("root", "321");
+            string a = DBCon.DBUtility.DESEncrypt.Encrypt("root", "123");
+            string b = DBCon.DBUtility.DESEncrypt.Encrypt("root", "321");
 
             working = false;
             timer1.Enabled = true;
-            timer1.Interval = 5*60000; //设置时间间隔（毫秒为单位）单位Ms
+            timer1.Interval = 5 * 60000; //设置时间间隔（毫秒为单位）单位Ms
             this.DGMAIN.RowsDefaultCellStyle.BackColor = Color.White;
             this.DGMAIN.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
             this.DGMAIN.RowTemplate.DefaultCellStyle.SelectionBackColor = Color.LightBlue;
@@ -90,7 +98,7 @@ namespace MonitorAndControl
 
 
         private void GetDG(System.Data.DataTable dt)
-        {         
+        {
             DGMAIN.SetDataSource(dt);
             if (this.DGMAIN.Columns.Count == 0)
             {
@@ -116,7 +124,7 @@ namespace MonitorAndControl
                 DGMAIN.AllowUserToResizeRows = false;
             }
 
-  
+
         }
         private void GetDG()
         {
@@ -363,48 +371,48 @@ namespace MonitorAndControl
             }
             if (ServerCheckItem.CheckType == 0 && ServerCheckItem.CheckResult != "Running")
             {
-                messagem = messagem + "\r\n" + "Windows服务：" +ServerCheckItem.ServerIP.ToString() + " " + ServerCheckItem.CheckItem.ToString() + "：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "Windows服务：" + ServerCheckItem.ServerIP.ToString() + " " + ServerCheckItem.CheckItem.ToString() + "：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
 
             }
             if (ServerCheckItem.CheckType == 1 && ServerCheckItem.CheckResult != "端口打开")
             {
-                messagem = messagem + "\r\n" + "端口：" +ServerCheckItem.ServerIP.ToString() + ":" + ServerCheckItem.CheckItem.ToString() + "：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "端口：" + ServerCheckItem.ServerIP.ToString() + ":" + ServerCheckItem.CheckItem.ToString() + "：" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
             }
             if (ServerCheckItem.CheckType == -2 && ServerCheckItem.CheckResult != "正常")
             {
                 string[] strArray = ServerCheckItem.CheckItem.ToString().Trim().Split('!');
                 string _disksrc = strArray[0];
                 string _threshold = strArray[1];
-                messagem = messagem+ "\r\n" + "Windows磁盘："  +ServerCheckItem.ServerIP + "的"+_disksrc+ "盘不足"+ _threshold + "GB 可用空间" + ServerCheckItem.CheckResult.ToString() + "GB " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "Windows磁盘：" + ServerCheckItem.ServerIP + "的" + _disksrc + "盘不足" + _threshold + "GB 可用空间" + ServerCheckItem.CheckResult.ToString() + "GB " + ServerCheckItem.ExecutionTime;
             }
             if (ServerCheckItem.CheckType == -3 && ServerCheckItem.CheckResult != "正常")
             {
                 string[] strArray = ServerCheckItem.CheckItem.ToString().Trim().Split('!');
                 int _port = (int)Convert.ToInt64(strArray[0]);
                 string _ServiceName = strArray[1];
-                
-                messagem = messagem + "\r\n" + "CentOS服务：" +ServerCheckItem.ServerIP + "服务"+_ServiceName + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+
+                messagem = messagem + "\r\n" + "CentOS服务：" + ServerCheckItem.ServerIP + "服务" + _ServiceName + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
             }
             if (ServerCheckItem.CheckType == -4 && ServerCheckItem.CheckResult != "正常")
             {
                 string[] strArray = ServerCheckItem.CheckItem.ToString().Trim().Split('!');
                 int _port = (int)Convert.ToInt64(strArray[0]);
                 string _path = strArray[1];
-                messagem = messagem + "\r\n" + "CentOS磁盘：" + ServerCheckItem.ServerIP + " /" + _path+" 剩余空间"+ ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "CentOS磁盘：" + ServerCheckItem.ServerIP + " /" + _path + " 剩余空间" + ServerCheckItem.CheckResult.ToString() + " " + ServerCheckItem.ExecutionTime;
             }
 
             return messagem;
 
 
         }
-        private async void  GetItemList()
+        private async void GetItemList()
         {
             if (working == true) { return; }
             working = true;
 
             //list.Clear();
             Win32ServiceManager wsm = new Win32ServiceManager();
-            list = wsm.GetItem();            
+            list = wsm.GetItem();
             List<string> messaagelist = new List<string>();
 
             // 使用Task循环创建50个线程
@@ -497,7 +505,7 @@ namespace MonitorAndControl
                                                 "1000002", "3"
                                                 );
                             Console.Write("\r\n");
-                        }  
+                        }
                     }
                     else
                     {///stoney a aaaaaaa
@@ -507,14 +515,14 @@ namespace MonitorAndControl
                             string Joke = wsm.GetJoke();//取66服务器上的笑话
                             if (Joke == "")
                             {
-                                RandomWords ="来自77的笑话"+"\r\n"+ wsm.GetRandomWords();//取1.77数据库的笑话
+                                RandomWords = "来自77的笑话" + "\r\n" + wsm.GetRandomWords();//取1.77数据库的笑话
                             }
                             else
                             {
                                 RandomWords = "来自66的笑话" + "\r\n" + Joke.Trim();
                             }
 
-                           
+
 
                             new WeCom().SendToWeCom(
                                                 RandomWords,
@@ -538,16 +546,16 @@ namespace MonitorAndControl
                 {
                     if (a != "")
                     {
-                        str6oclock = str6oclock+ a;
+                        str6oclock = str6oclock + a;
                     }
                 }
                 GetDG(dt);
-            }   
+            }
             Console.WriteLine(DateTime.Now.ToString() + " 本次完成\r\n");
-            working = false;            
+            working = false;
         }
 
-        
+
         /// <summary>
         /// 测试-发天气预报
         /// </summary>
@@ -672,7 +680,7 @@ namespace MonitorAndControl
 
         private void 不朽ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           // PythonApplication1 p = new PythonApplication1();
+            // PythonApplication1 p = new PythonApplication1();
         }
 
         /// <summary>
@@ -689,16 +697,16 @@ namespace MonitorAndControl
             }
 
 
-             int   msUntilFour = (int)((zeroOClock - now).TotalMilliseconds);
-                   
-            
-            
+            int msUntilFour = (int)((zeroOClock - now).TotalMilliseconds);
+
+
+
 
             var t = new System.Threading.Timer(doWeather);//发送天气预报
 
 
             t.Change(msUntilFour, Timeout.Infinite);
-            
+
 
         }
 
@@ -721,10 +729,10 @@ namespace MonitorAndControl
                 var t = new System.Threading.Timer(doWeather);
                 t.Change(msUntilFour, Timeout.Infinite);
             }
-            else if (WeatherOrIT == "IT") 
+            else if (WeatherOrIT == "IT")
             {
-            
-            }           
+
+            }
         }
 
 
@@ -779,33 +787,82 @@ namespace MonitorAndControl
             //加密连接字符串 string aa = "server=172.16.1.77;User ID=sa;Password=@Fuf%wfY;database=ServiceManage";
             InputPassWord ps = new InputPassWord();
             ps.ShowDialog();
-            if (ps.DialogResult != DialogResult.OK) { MessageBox.Show("请重新输入密码"); return; }            
+            if (ps.DialogResult != DialogResult.OK) { MessageBox.Show("请重新输入密码"); return; }
             //Clipboard.SetText(ps.stringPassword);
             //MessageBox.Show("密码已复制到剪切板，请继续");            
         }
 
         private void 访问linuxToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Win32ServiceManager wsm= new Win32ServiceManager();
+            Win32ServiceManager wsm = new Win32ServiceManager();
             //DiskInfo diskInfo = new DiskInfo();
             //diskInfo = wsm.LinuxGetFolderDiskInfo("172.16.1.99",2263,"root","Rainoo5683@","data");
-
-
             //string a=wsm.LinuxGetServicesInfo("172.16.1.99", 2263, "root", "Rainoo5683@", "mysql");
-
             string Joke = wsm.GetJoke();
         }
-
+        string TextToEncrypt = "443eb1614f2f4188fe49e6127a3901";
+        static string strKey = "5a75d5ec839a8f1ed686f0ddb67d5f09";
+        static string strIV = "f244ef6f0accec87";
         private void getJokeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Win32ServiceManager wsm = new Win32ServiceManager();
             //string a = wsm.GetJoke();
-            string msg = DBConn.DBUtility. "443eb1614f2f4188fe49e6127a3901";
-            string key = "5a75d5ec839a8f1ed686f0ddb67d5f09";
-            string iv = "f244ef6f0accec87";
-            string b = DBConn.DBUtility.AESEncrypt.AesDecrypt(msg, key, iv);
+
+            string aaa = "let me cats you";
+            
+            string a= DBConn.DBUtility.AESEncrypt.Encrypt(aaa, strKey, strIV);
+
+            string b= DBConn.DBUtility.AESEncrypt.Decrypt(TextToEncrypt, strKey, strIV);
+
+
+
+
+
+
 
         }
+    
+
+        //protected string DecryptByAES()
+        //{
+        //    string ciphertextHex = "443eb1614f2f4188fe49e6127a3901"; // 替换为实际的16进制密文
+        //    string ivHex = "f244ef6f0accec87";
+        //    string keyHex = "5a75d5ec839a8f1ed686f0ddb67d5f09";
+
+        //    byte[] ciphertext = HexToByteArray(ciphertextHex);
+        //    byte[] iv = HexToByteArray(ivHex);
+        //    byte[] key = HexToByteArray(keyHex);
+
+        //    using (Aes aes = Aes.Create())
+        //    {
+        //        aes.KeySize = 256;
+        //        aes.BlockSize = 128;
+        //        aes.Key = key;
+        //        aes.IV = iv;
+        //        aes.Mode = CipherMode.CFB;
+        //        aes.Padding = PaddingMode.None;
+
+        //        using (ICryptoTransform decryptor = aes.CreateDecryptor())
+        //        {
+        //            byte[] decryptedBytes = decryptor.TransformFinalBlock(ciphertext, 0, ciphertext.Length);
+        //            string decryptedText = Encoding.UTF8.GetString(decryptedBytes);
+        //            Console.WriteLine("Decrypted Text: " + decryptedText);
+        //            return decryptedText;
+        //        }
+        //    }
+           
+        //}
+
+        //private static byte[] HexToByteArray(string hex)
+        //{
+        //    int length = hex.Length;
+        //    byte[] bytes = new byte[length / 2];
+        //    for (int i = 0; i < length; i += 2)
+        //    {
+        //        bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+        //    }
+        //    return bytes;
+        //}
     }
 }
 
