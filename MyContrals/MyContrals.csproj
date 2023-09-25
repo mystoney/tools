@@ -9,12 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MyContrals</RootNamespace>
     <AssemblyName>MyContrals</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -119,10 +120,6 @@
     <None Include="Resources\index.gif" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Helper\Helper.csproj">
-      <Project>{953e9438-9604-4cfc-b97e-907a710db1fe}</Project>
-      <Name>Helper</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TX.Framework.WindowUI\TX.Framework.WindowUI.csproj">
       <Project>{e8746b10-eaaf-44b7-95cc-29e4c42ec8d5}</Project>
       <Name>TX.Framework.WindowUI</Name>

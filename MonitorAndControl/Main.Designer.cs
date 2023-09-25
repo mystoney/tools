@@ -47,6 +47,7 @@ namespace MonitorAndControl
             this.不朽ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.加密ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.访问linuxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.getJokeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.ToolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.Label1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -55,7 +56,7 @@ namespace MonitorAndControl
             this.DGMAIN = new MyContrals.ExDataGridView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.getJokeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nPOIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -152,7 +153,8 @@ namespace MonitorAndControl
             this.不朽ToolStripMenuItem,
             this.加密ToolStripMenuItem,
             this.访问linuxToolStripMenuItem,
-            this.getJokeToolStripMenuItem});
+            this.getJokeToolStripMenuItem,
+            this.nPOIToolStripMenuItem});
             this.测试ToolStripMenuItem.Name = "测试ToolStripMenuItem";
             this.测试ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.测试ToolStripMenuItem.Text = "测试";
@@ -160,44 +162,51 @@ namespace MonitorAndControl
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(156, 26);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(224, 26);
             this.toolStripMenuItem2.Text = "发微信";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // 发送邮件ToolStripMenuItem
             // 
             this.发送邮件ToolStripMenuItem.Name = "发送邮件ToolStripMenuItem";
-            this.发送邮件ToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
+            this.发送邮件ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.发送邮件ToolStripMenuItem.Text = "发送邮件";
             this.发送邮件ToolStripMenuItem.Click += new System.EventHandler(this.发送邮件ToolStripMenuItem_Click);
             // 
             // 新增ToolStripMenuItem
             // 
             this.新增ToolStripMenuItem.Name = "新增ToolStripMenuItem";
-            this.新增ToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
+            this.新增ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.新增ToolStripMenuItem.Text = "新增服务";
             this.新增ToolStripMenuItem.Click += new System.EventHandler(this.新增ToolStripMenuItem_Click);
             // 
             // 不朽ToolStripMenuItem
             // 
             this.不朽ToolStripMenuItem.Name = "不朽ToolStripMenuItem";
-            this.不朽ToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
+            this.不朽ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.不朽ToolStripMenuItem.Text = "不朽";
             this.不朽ToolStripMenuItem.Click += new System.EventHandler(this.不朽ToolStripMenuItem_Click);
             // 
             // 加密ToolStripMenuItem
             // 
             this.加密ToolStripMenuItem.Name = "加密ToolStripMenuItem";
-            this.加密ToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
+            this.加密ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.加密ToolStripMenuItem.Text = "加密";
             this.加密ToolStripMenuItem.Click += new System.EventHandler(this.加密ToolStripMenuItem_Click);
             // 
             // 访问linuxToolStripMenuItem
             // 
             this.访问linuxToolStripMenuItem.Name = "访问linuxToolStripMenuItem";
-            this.访问linuxToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
+            this.访问linuxToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.访问linuxToolStripMenuItem.Text = "访问linux";
             this.访问linuxToolStripMenuItem.Click += new System.EventHandler(this.访问linuxToolStripMenuItem_Click);
+            // 
+            // getJokeToolStripMenuItem
+            // 
+            this.getJokeToolStripMenuItem.Name = "getJokeToolStripMenuItem";
+            this.getJokeToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.getJokeToolStripMenuItem.Text = "GetJoke()";
+            this.getJokeToolStripMenuItem.Click += new System.EventHandler(this.getJokeToolStripMenuItem_Click);
             // 
             // StatusStrip
             // 
@@ -279,12 +288,12 @@ namespace MonitorAndControl
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
             // 
-            // getJokeToolStripMenuItem
+            // nPOIToolStripMenuItem
             // 
-            this.getJokeToolStripMenuItem.Name = "getJokeToolStripMenuItem";
-            this.getJokeToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.getJokeToolStripMenuItem.Text = "GetJoke()";
-            this.getJokeToolStripMenuItem.Click += new System.EventHandler(this.getJokeToolStripMenuItem_Click);
+            this.nPOIToolStripMenuItem.Name = "nPOIToolStripMenuItem";
+            this.nPOIToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.nPOIToolStripMenuItem.Text = "NPOI";
+            this.nPOIToolStripMenuItem.Click += new System.EventHandler(this.nPOIToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -341,5 +350,6 @@ namespace MonitorAndControl
         private System.Windows.Forms.ToolStripMenuItem 加密ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 访问linuxToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem getJokeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nPOIToolStripMenuItem;
     }
 }

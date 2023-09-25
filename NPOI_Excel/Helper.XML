@@ -1,0 +1,949 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Helper</name>
+    </assembly>
+    <members>
+        <member name="T:Helper.Binding.BindingCollection`1">
+            <summary>
+            提供支持数据绑定的泛型集合
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Helper.Binding.BindingCollection`1.IsSortedCore">
+            <summary>
+            是否已排序
+            </summary>
+        </member>
+        <member name="P:Helper.Binding.BindingCollection`1.SortDirectionCore">
+            <summary>
+            获取列表的排序方向
+            </summary>
+        </member>
+        <member name="P:Helper.Binding.BindingCollection`1.SortPropertyCore">
+            <summary>
+            获取用于对列表排序的属性说明符
+            </summary>
+        </member>
+        <member name="P:Helper.Binding.BindingCollection`1.SupportsSortingCore">
+            <summary>
+            是否支持排序
+            </summary>
+        </member>
+        <member name="P:Helper.Binding.BindingCollection`1.SupportsSearchingCore">
+            <summary>
+            是否支持搜索
+            </summary>
+        </member>
+        <member name="M:Helper.Binding.BindingCollection`1.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Helper.Binding.BindingCollection`1.#ctor(System.Collections.Generic.IList{`0})">
+            <summary>
+            构造函数
+            </summary>
+            <param name="list"></param>
+        </member>
+        <member name="M:Helper.Binding.BindingCollection`1.ApplySortCore(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)">
+            <summary>
+            对项排序
+            </summary>
+            <param name="property"></param>
+            <param name="direction"></param>
+        </member>
+        <member name="M:Helper.Binding.BindingCollection`1.RemoveSortCore">
+            <summary>
+            移除排序
+            </summary>
+        </member>
+        <member name="P:Helper.Binding.ObjectPropertyCompare`1.Property">
+            <summary>
+            属性
+            </summary>
+        </member>
+        <member name="P:Helper.Binding.ObjectPropertyCompare`1.Direction">
+            <summary>
+            排序方向
+            </summary>
+        </member>
+        <member name="M:Helper.Binding.ObjectPropertyCompare`1.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Helper.Binding.ObjectPropertyCompare`1.#ctor(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="property"></param>
+            <param name="direction"></param>
+        </member>
+        <member name="M:Helper.Binding.ObjectPropertyCompare`1.Compare(`0,`0)">
+            <summary>
+            比较两个对象
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Helper.Configer.Configer">
+            <summary>
+            Configer读取写入类
+            </summary>
+        </member>
+        <member name="T:Helper.Configer.Configer.ConfigSection">
+            <summary>
+            Configer.configSections配置节点
+            </summary>
+        </member>
+        <member name="P:Helper.Configer.Configer.ConfigSection.Interface_name">
+            <summary>
+            接口名称
+            </summary>
+        </member>
+        <member name="P:Helper.Configer.Configer.ConfigSection.mailing_address">
+            <summary>
+            MAIL地址
+            </summary>
+        </member>
+        <member name="P:Helper.Configer.Configer.ConfigSection.Sender">
+            <summary>
+            发送人MAIL地址
+            </summary>
+        </member>
+        <member name="P:Helper.Configer.Configer.ConfigSection.password">
+            <summary>
+            发送人密码
+            </summary>
+        </member>
+        <member name="T:Helper.Configer.Configer.ConfigManager">
+            <summary>
+            读取Config获取邮件信息
+            </summary>
+        </member>
+        <member name="F:Helper.Configer.Configer.ConfigManager.Instance">
+            <summary>
+            配置Config信息实体
+            </summary>
+        </member>
+        <member name="T:Helper.CopyFile.CopyFile">
+            <summary>
+            复制文件工具类
+            </summary>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.CopyDirectory(System.String,System.String,System.String,System.String,System.Boolean,System.String,System.Boolean,System.Boolean,System.Boolean)">
+             <summary>
+             复制文件夹中的所有内容
+            <!--图片服务器可支持类型-->
+            <add key = "imgtype" value="Eb9hkLwmRSbtQONpOwRsgUOWpq0AH3suP9pAl9UzD1E=" />
+            <!--图片服务器源路径-->
+            <add key = "SourceDirectory" value="NYOgCGQALKWbZschXyBRp0zNqMxonMOSzW4wSd9oqgztkzbIo44YRmXY8kGB+EO9" />
+            <!--图片服务器源路径用户名-->
+            <add key = "SourceUserName" value="9ZwjbCk/prqh6911XEkS1A==" />
+            <!--图片服务器源路径密码-->
+            <add key = "SourcePassWord" value="0S6j9HpcoU6S+cxaeOpELg==" />
+            <!--图片服务器目标路径-->
+            <add key = "TargetDirectory" value="kfDslHiD/rod/T/Fy+/EHIEU8e5vX6m/bor5x0TyxWPk+0iDQZ4IeN14jtq2H4to" />
+            <!--图片服务器目标路径用户名-->
+            <add key = "TargetUserName" value="9ZwjbCk/prqh6911XEkS1A==" />
+            <!--图片服务器目标路径用密码-->
+            <add key = "TargetPassWord" value="0S6j9HpcoU6S+cxaeOpELg==" />
+            <!--图片服务器备份路径-->
+            <add key = "BackupDirectory" value="ZsrlG20TkntrfkO3aFrxtwNJl4UlO/cmMyADI5cqlvQ=" />
+            <!--图片备份路径用户名-->
+            <add key = "BackupUserName" value="3c8dJ7js9MzXlV6s110+brtuflPlfRDeatulp1w507U=" />
+            <!--图片备份路径用密码-->
+            <add key = "BackupPassWord" value="xaiFOTRzJQGOUhVHj3/5Cg==" />
+             </summary>
+             <param name="sourceDirPath">源文件夹目录</param>
+             <param name="source_username">源文件夹目录用户名（密文字符串）</param>
+             <param name="source_userpwd">源文件夹目录密码（密文字符串）</param>
+             <param name="saveDirPath">指定文件夹目录</param>
+             <param name="sourceDirPath_state">输入路径的状态（默认为true = 文件 可选为false = 路径）  </param>
+             <param name="BackupDirectory">备份文件夹目录（可选）</param>
+             <param name="sourceDirPath_key">源文件夹目录登陆信息（可选） </param>
+             <param name="saveDirPath_key">指定文件夹目录登陆信息（可选）</param>
+             <param name="BackupDirectory_key">备份文件夹目录登陆信息（可选）</param>
+             <returns></returns>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.connectState(System.String,System.String,System.String)">
+            <summary>
+            连接远程共享文件夹
+            </summary>
+            <param name="path">远程共享文件夹的路径</param>
+            <param name="userName">用户名</param>
+            <param name="passWord">密码</param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.FindFile2(System.String)">
+            <summary>
+            遍历文件夹所有目录和子目录（需要配置返回文件类型 例： <add key="QueryRailPassword" value="*.MP3|*.JPG|*.GIF|*.PNG|*.PDF"></add>）
+            </summary>
+            <param name="sSourcePath">源目录</param>
+            <returns>返回路径的List_string</returns>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.WatcherStrat(System.String,System.String)">
+            <summary>
+            监视某个文件夹的文件情况
+            </summary>
+            <param name="path">监视路径</param>
+            <param name="filter">监视的文件类型 默认 "*.*"</param>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.OnCreated(System.Object,System.IO.FileSystemEventArgs)">
+            <summary>
+            监听新建文件事件
+            </summary>
+            <param name="source"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.OnChanged(System.Object,System.IO.FileSystemEventArgs)">
+            <summary>
+            监听改变文件事件
+            </summary>
+            <param name="source"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.OnDeleted(System.Object,System.IO.FileSystemEventArgs)">
+            <summary>
+            监听删除文件事件
+            </summary>
+            <param name="source"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.OnRenamed(System.Object,System.IO.FileSystemEventArgs)">
+            <summary>
+            监听重命名文件事件
+            </summary>
+            <param name="source"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.string_Route(System.String)">
+            <summary>
+            从全路径string中得到路径
+            </summary>
+            <param name="FullPath">全路径</param>
+            <returns>路径</returns>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.string_filename(System.String)">
+            <summary>
+            从全路径string中得到文件名
+            </summary>
+            <param name="FullPath">全路径</param>
+            <returns>文件名</returns>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.string_fileexc(System.String)">
+            <summary>
+            从全路径string中得到扩展名
+            </summary>
+            <param name="FullPath">全路径</param>
+            <returns>扩展名</returns>
+        </member>
+        <member name="M:Helper.CopyFile.CopyFile.string_full(System.String)">
+            <summary>
+            判断字符串是目录还是文件
+            </summary>
+            <param name="str">需要判断的字符串</param>
+            <returns>返回 true = '目录' false = '文件'  </returns>
+        </member>
+        <member name="T:Helper.Decrypt.Decrypt_out">
+            <summary>
+            解密后得到连接字符串
+            </summary>
+        </member>
+        <member name="M:Helper.Decrypt.Decrypt_out.Decrypt_out_Str(System.String)">
+            <summary>
+            得到解密后的字符串
+            </summary>
+            <returns>返回解密后的字符串</returns>
+        </member>
+        <member name="T:Helper.DEncrypt.Security">
+            <summary>
+            加解密用类
+            </summary>
+        </member>
+        <member name="M:Helper.DEncrypt.Security.EncryptDES(System.String,System.String)">
+            <summary> 
+            DES加密字符串 
+            </summary> 
+            <param name="encryptString">待加密的字符串</param> 
+            <param name="encryptKey">加密密钥,要求为8位</param> 
+            <returns>加密成功返回加密后的字符串，失败返回源串</returns> 
+        </member>
+        <member name="M:Helper.DEncrypt.Security.DecryptDES(System.String,System.String)">
+            <summary> 
+            DES解密字符串 
+            </summary> 
+            <param name="decryptString">待解密的字符串</param> 
+            <param name="decryptKey">解密密钥,要求为8位,和加密密钥相同</param> 
+            <returns>解密成功返回解密后的字符串，失败返源串</returns> 
+        </member>
+        <member name="T:Helper.DownLoadFile.HttpDownLoadFile">
+            <summary>
+            http下载文件的类
+            </summary>
+        </member>
+        <member name="M:Helper.DownLoadFile.HttpDownLoadFile.HttpDownloadFile(System.String,System.String)">
+            <summary>
+            Http下载文件
+            </summary>
+        </member>
+        <member name="T:Helper.Excel.ExcelHelper">
+            <summary>
+            ExcelHelper
+            </summary>
+        </member>
+        <member name="M:Helper.Excel.ExcelHelper.#ctor(System.String)">
+            <summary>
+            ExcelHelper（fileName）
+            </summary>
+            <param name="fileName"></param>
+        </member>
+        <member name="M:Helper.Excel.ExcelHelper.excel_sheet_list">
+            <summary>
+            得到EXCEL的工作表中的所有Sheet名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.Excel.ExcelHelper.DataTableToExcel(System.Data.DataTable,System.String,System.Boolean)">
+            <summary>
+            将DataTable数据导入到excel中
+            </summary>
+            <param name="data">要导入的数据</param>
+            <param name="isColumnWritten">DataTable的列名是否要导入</param>
+            <param name="sheetName">要导入的excel的sheet的名称</param>
+            <returns>导入数据行数(包含列名那一行)</returns>
+        </member>
+        <member name="M:Helper.Excel.ExcelHelper.ExcelToDataTable(System.String,System.Boolean)">
+            <summary>
+            将excel中的数据导入到DataTable中
+            </summary>
+            <param name="sheetName">excel工作薄sheet的名称</param>
+            <param name="isFirstRowColumn">第一行是否是DataTable的列名</param>
+            <returns>返回的DataTable</returns>
+        </member>
+        <member name="M:Helper.Excel.ExcelHelper.Dispose">
+            <summary>
+            Dispose
+            </summary>
+        </member>
+        <member name="M:Helper.Excel.ExcelHelper.Dispose(System.Boolean)">
+            <summary>
+            Dispose
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Helper.Excel.ExcelHelper.DataSetToExcel(System.Data.DataSet,System.Boolean)">
+            <summary>
+            将DataTable数据导入到excel中
+            </summary>
+            <param name="ds">要导入的数据</param>
+            <param name="isColumnWritten">DataTable的列名是否要导入</param>
+            <returns>导入数据行数(包含列名那一行)</returns>
+        </member>
+        <member name="T:Helper.Extension">
+            <summary>
+            扩展类
+            </summary>
+        </member>
+        <member name="M:Helper.Extension.CheckNull``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            检查List是不是为空
+            </summary>
+            <typeparam name="T">所有继承IEnumerable的类型</typeparam>
+            <param name="list">要检查的List</param>
+            <returns>如果为空则返回的List，否则返回原来的List</returns>
+        </member>
+        <member name="M:Helper.Extension.ConvertToDataTable``1(System.Collections.Generic.List{``0})">
+            <summary>
+            将List(包括匿名类)转为datatable
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="items"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.Extension.IsNullable(System.Type)">
+            <summary>
+            Determine of specified type is nullable
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.Extension.GetCoreType(System.Type)">
+            <summary>
+            Return underlying type if type is Nullable otherwise return the type.
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Helper.Http.Http">
+            <summary>
+            Http连接用类
+            </summary>
+        </member>
+        <member name="M:Helper.Http.Http.HttpPost(System.String,System.String,System.String)">
+            <summary>
+            调用HTTP方式的接口
+            </summary>
+            <param name="url">访问的URL</param>
+            <param name="data">要传递的数据的字符串</param>
+            <param name="SetMethod">发送的模式（PUT，POST）</param>
+            <returns>HTTP回传的字符串</returns>
+        </member>
+        <member name="M:Helper.Http.Http.HttpGet(System.String)">
+            <summary>
+            调用HTTP方式的接口
+            </summary>
+            <param name="url">访问的URL</param>
+            <returns>HTTP回传的字符串</returns>
+        </member>
+        <member name="M:Helper.Http.Http.HttpPost(System.String,System.String,System.String,System.String)">
+            <summary>
+            调用HTTP方式的接口
+            </summary>
+            <param name="url">访问的URL</param>
+            <param name="data">要传递的数据的字符串</param>
+            <param name="SetMethod">发送的模式（PUT，POST）</param>
+            <param name="userAndPassword">用户名加密码中间用:隔开,如果没有请输入""</param>
+            <returns>HTTP回传的字符串</returns>
+        </member>
+        <member name="T:Helper.file.file_io">
+            <summary>
+            文件操作类
+            </summary>
+        </member>
+        <member name="M:Helper.file.file_io.copyDirectory(System.String,System.String)">
+            <summary>
+            递归拷贝所有子目录。
+            </summary>
+            <param >源目录</param>
+            <param >目的目录</param>
+        </member>
+        <member name="M:Helper.file.file_io.CopyFile(System.IO.DirectoryInfo,System.String)">
+            <summary>
+            拷贝目录下的所有文件到目的目录。
+            </summary>
+            <param name="path">源路径</param>
+            <param name="desPath">目的路径</param>
+        </member>
+        <member name="M:Helper.file.file_io.DeleteFile(System.String)">
+            <summary>
+            删除指定路径下的文件夹和文件
+            </summary>
+            <param name="yourPath">路径</param>
+        </member>
+        <member name="M:Helper.file.file_io.DeleteDierctory(System.String)">
+            <summary>
+            删除指定的文件夹
+            </summary>
+            <param name="yourPath">路径</param>
+        </member>
+        <member name="M:Helper.file.file_io.AddCreateDirectory(System.String)">
+            <summary>
+            根据给出的路径建立目录与子目录
+            </summary>
+            <param name="yourPath">要建立目录的路径</param>
+        </member>
+        <member name="M:Helper.file.file_io.CopyFile(System.String,System.String)">
+            <summary>
+            复制文件
+            </summary>
+            <param name="fromFile">要复制的文件</param>
+            <param name="toFile">要保存的位置</param>
+        </member>
+        <member name="T:Helper.Json.JsonHelper">
+            <summary>
+            Json帮助类
+            </summary>
+        </member>
+        <member name="M:Helper.Json.JsonHelper.SerializeObject(System.Object)">
+            <summary>
+            将对象序列化为JSON格式
+            </summary>
+            <param name="o">对象</param>
+            <returns>json字符串</returns>
+        </member>
+        <member name="M:Helper.Json.JsonHelper.DeserializeJsonToObject``1(System.String)">
+            <summary>
+            解析JSON字符串生成对象实体
+            </summary>
+            <typeparam name="T">对象类型</typeparam>
+            <param name="json">json字符串(eg.{"ID":"112","Name":"石子儿"})</param>
+            <returns>对象实体</returns>
+        </member>
+        <member name="M:Helper.Json.JsonHelper.DeserializeJsonToList``1(System.String)">
+            <summary>
+            解析JSON数组生成对象实体集合
+            </summary>
+            <typeparam name="T">对象类型</typeparam>
+            <param name="json">json数组字符串(eg.[{"ID":"112","Name":"石子儿"}])</param>
+            <returns>对象实体集合</returns>
+        </member>
+        <member name="M:Helper.Json.JsonHelper.DeserializeAnonymousType``1(System.String,``0)">
+            <summary>
+            反序列化JSON到给定的匿名对象.
+            </summary>
+            <typeparam name="T">匿名对象类型</typeparam>
+            <param name="json">json字符串</param>
+            <param name="anonymousTypeObject">匿名对象</param>
+            <returns>匿名对象</returns>
+        </member>
+        <member name="T:Helper.mail.mail">
+            <summary>
+            发送邮件
+            </summary>
+        </member>
+        <member name="M:Helper.mail.mail.addmail(System.String,System.String,System.String,System.Int32,System.String,System.String,System.String[],System.Collections.Generic.List{System.String},System.String[])">
+            <summary>
+            发送邮件
+            </summary>
+            <param name="Title_name">邮件标题</param>
+            <param name="text">邮件正文</param>
+            <param name="smtp">SMTP设置</param>
+            <param name="smtp_port">SMTP端口号</param>
+            <param name="emailAcount">发送端地址</param>
+            <param name="emailPassword">发送端密码</param>
+            <param name="mail">接收人地址</param>
+            <param name="strFilePath">附件的本地路径</param>
+            <param name="CC">抄送人地址列表</param>
+            <returns></returns>
+        </member>
+        <member name="T:Helper.OracleHelper.OracleHelper">
+            <summary>
+            Oracle数据库帮助类
+            </summary>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.ExecuteNonQuery(System.String,System.Data.CommandType,System.String,Oracle.ManagedDataAccess.Client.OracleParameter[])">
+            <summary>
+            执行不包含选择的数据库查询
+            </summary>
+            <param name="connectionString">到数据库的连接字符串</param>
+            <param name="cmdType">命令类型：存储过程或SQL</param>
+            <param name="cmdText">ActualSQL命令</param>
+            <param name="commandParameters">绑定到命令的参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.Query(System.String,System.String,Oracle.ManagedDataAccess.Client.OracleParameter[])">
+            <summary>
+            执行查询语句，返回DataSet
+            </summary>
+            <param name="connectionString">到数据库的连接字符串</param>
+            <param name="SQLString">查询语句</param>
+            <param name="cmdParms"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.GetSingle(System.String,System.String)">
+            <summary>
+            执行一条计算查询结果语句，返回查询结果（object）。
+            </summary>
+            <param name="connectionString">到数据库的连接字符串</param>
+            <param name="SQLString">计算查询结果语句</param>
+            <returns>查询结果（object）</returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.Exists(System.String,System.String)">
+            <summary>
+            需要查询的信息是否存在
+            </summary>
+            <param name="connectionString">到数据库的连接字符串</param>
+            <param name="strOracle">sql字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.ExecuteNonQuery(Oracle.ManagedDataAccess.Client.OracleTransaction,System.Data.CommandType,System.String,Oracle.ManagedDataAccess.Client.OracleParameter[])">
+            <summary>
+            使用所提供的参数对现有数据库事务执行OraceCoMMand（不返回结果集）
+            </summary>
+            <remarks>
+            e.g.:  
+             int result = ExecuteNonQuery(trans, CommandType.StoredProcedure, "PublishOrders", new OracleParameter(":prodid", 24));
+            </remarks>
+            <param name="trans">现有数据库事务</param>
+            <param name="cmdType">命令类型（存储过程、文本等）the CommandType (stored procedure, text, etc.)</param>
+            <param name="cmdText">存储过程名称或PL/SQL命令 the stored procedure name or PL/SQL command</param>
+            <param name="commandParameters">用于执行命令的Oracle PARAMTER数组 an array of OracleParamters used to execute the command</param>
+            <returns>表示受命令影响的行数的int an int representing the number of rows affected by the command</returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.ExecuteNonQuery(Oracle.ManagedDataAccess.Client.OracleConnection,System.Data.CommandType,System.String,Oracle.ManagedDataAccess.Client.OracleParameter[])">
+            <summary>
+            使用所提供的参数对现有数据库连接执行OraceCoMMand（不返回结果集）
+            </summary>
+            <remarks>
+            e.g.:  
+             int result = ExecuteNonQuery(connString, CommandType.StoredProcedure, "PublishOrders", new OracleParameter(":prodid", 24));
+            </remarks>
+            <param name="connection">现有数据库连接</param>
+            <param name="cmdType">命令类型（存储过程、文本等）the CommandType (stored procedure, text, etc.)</param>
+            <param name="cmdText">存储过程名称或PL/SQL命令 the stored procedure name or PL/SQL command</param>
+            <param name="commandParameters">用于执行命令的Oracle PARAMTER数组 an array of OracleParamters used to execute the command</param>
+            <returns>表示受命令影响的行数的int an int representing the number of rows affected by the command</returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.ExecuteNonQuery(System.String,System.String)">
+            <summary>
+            使用所提供的参数对现有数据库连接执行OraceCoMMand（不返回结果集）。
+            </summary>
+            <remarks>
+            e.g.:  
+             int result = ExecuteNonQuery(connString, CommandType.StoredProcedure, "PublishOrders", new OracleParameter(":prodid", 24));
+            </remarks>
+            <param name="connectionString">现有数据库连接</param>
+            <param name="cmdText">存储过程名称或PL/SQL命令</param>
+            <returns>表示受命令影响的行数的int</returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.ExecuteReader(System.String,System.Data.CommandType,System.String,Oracle.ManagedDataAccess.Client.OracleParameter[])">
+            <summary>
+            Execute a select query that will return a result set
+            </summary>
+            <param name="connectionString">Connection string</param>
+            <param name="cmdType">命令类型（存储过程、文本等）</param>
+            <param name="cmdText">存储过程名称或PL/SQL命令</param>
+            <param name="commandParameters">用于执行命令的Oracle PARAMTER数组</param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.ExecuteScalar(System.String,System.Data.CommandType,System.String,Oracle.ManagedDataAccess.Client.OracleParameter[])">
+            <summary>
+            执行OraceCoMMand，使用所提供的参数返回连接字符串中指定的数据库中的第一条记录的第一列。
+            </summary>
+            <remarks>
+            e.g.:  
+             Object obj = ExecuteScalar(connString, CommandType.StoredProcedure, "PublishOrders", new OracleParameter(":prodid", 24));
+            </remarks>
+            <param name="connectionString">连接字符串</param>
+            <param name="cmdType">命令类型（存储过程、文本等）</param>
+            <param name="cmdText">存储过程名称或PL/SQL命令</param>
+            <param name="commandParameters">用于执行命令的Oracle PARAMTER数组</param>
+            <returns>应该使用转换为{Type }转换为预期类型的对象。</returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.ExecuteScalar(Oracle.ManagedDataAccess.Client.OracleTransaction,System.Data.CommandType,System.String,Oracle.ManagedDataAccess.Client.OracleParameter[])">
+               <summary>
+               使用所提供的参数对指定的SQL事务执行OracleCommand（返回1x1结果集）。
+               </summary>
+               <param name="transaction">现有的SQL事务</param>
+               <param name="commandType">命令类型（存储过程、文本等）</param>
+               <param name="commandText">存储过程名称或PL/SQL命令</param>
+               <param name="commandParameters">用于执行命令的Oracle PARAMTER数组</param>
+               <returns>包含由命令生成的1x1结果集中的值的对象</returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.ExecuteScalar(Oracle.ManagedDataAccess.Client.OracleConnection,System.Data.CommandType,System.String,Oracle.ManagedDataAccess.Client.OracleParameter[])">
+            <summary>
+            执行OraceCopMand，使用所提供的参数返回现有数据库连接的第一条记录的第一列。
+            </summary>
+            <remarks>
+            e.g.:  
+             Object obj = ExecuteScalar(conn, CommandType.StoredProcedure, "PublishOrders", new OracleParameter(":prodid", 24));
+            </remarks>
+            <param name="connectionString">连接字符串</param>
+            <param name="cmdType">命令类型（存储过程、文本等）</param>
+            <param name="cmdText">存储过程名称或PL/SQL命令</param>
+            <param name="commandParameters">用于执行命令的Oracle PARAMTER数组</param>
+            <returns>应该使用转换为{Type }转换为预期类型的对象。</returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.CacheParameters(System.String,Oracle.ManagedDataAccess.Client.OracleParameter[])">
+            <summary>
+            向缓存添加一组参数
+            </summary>
+            <param name="cacheKey">查找参数的键值</param>
+            <param name="commandParameters">缓存的实际参数</param>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.GetCachedParameters(System.String)">
+            <summary>
+            从缓存中获取参数
+            </summary>
+            <param name="cacheKey">查找参数的关键</param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.PrepareCommand(Oracle.ManagedDataAccess.Client.OracleCommand,Oracle.ManagedDataAccess.Client.OracleConnection,Oracle.ManagedDataAccess.Client.OracleTransaction,System.Data.CommandType,System.String,Oracle.ManagedDataAccess.Client.OracleParameter[])">
+            <summary>
+            内部函数准备由数据库执行的命令
+            </summary>
+            <param name="cmd">现有命令对象</param>
+            <param name="conn">数据库连接对象</param>
+            <param name="trans">可选事务对象</param>
+            <param name="cmdType">命令类型，例如存储过程</param>
+            <param name="cmdText">命令测试</param>
+            <param name="commandParameters">命令的参数</param>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.OraBit(System.Boolean)">
+            <summary>
+            使用Oracle使用布尔数据类型的转换器
+            </summary>
+            <param name="value">转换值 true或false</param>
+            <returns>返回 Y或N</returns>
+        </member>
+        <member name="M:Helper.OracleHelper.OracleHelper.OraBool(System.String)">
+            <summary>
+            使用Oracle使用布尔数据类型的转换器
+            </summary>
+            <param name="value">转换值 Y或N</param>
+            <returns>返回true或false</returns>
+        </member>
+        <member name="T:Helper.sort.sort">
+            <summary>
+            排序算法类
+            </summary>
+        </member>
+        <member name="M:Helper.sort.sort.BubbleSortAscending1``1(System.Collections.Generic.IList{``0})">
+            <summary>
+            当某轮比较没有发生移动时，就可以确定排序完成了
+            <para>稳定排序</para>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="arr"></param>
+        </member>
+        <member name="M:Helper.sort.sort.QuickSortAscending1``1(System.Collections.Generic.IList{``0})">
+            <summary>
+            快速排序算法
+            <para>不稳定排序</para>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="arr"></param>
+        </member>
+        <member name="T:Helper.SQLSERVER.SqlServer_tool">
+            <summary>
+            sqlserver数据库的工具类
+            </summary>
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.Insertbulk(System.Data.DataTable,System.String,System.String)">
+            <summary>
+            按照DT插入数据库
+            </summary>
+            <param name="dt">需要insert的数据表（必须和数据库表结构一样） </param>
+            <param name="GetConnStr">连接字符串</param>
+            <param name="datatable_name">目的表名称</param>
+            <returns>是否成功 成功返回ok 不成功返回错误信息</returns>
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.updata_dt(System.Data.DataTable,System.String,System.String,System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            按照dt批量更新数据库表
+            </summary>
+            <param name="dt">需要更新的数据</param>
+            <param name="data_base">目标数据库名</param>
+            <param name="serverdt_name">目标数据库表名</param>
+            <param name="connStr">连接字符串</param>
+            <param name="where_list">更新数据库KEY字段</param>
+            <returns>成功返回“ok” 失败返回“报错信息”</returns>
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.IsTableExist(System.String,System.String,System.String)">
+            <summary>  
+            判断数据库表是否存在  
+            </summary>  
+            <param name="db">数据库</param>  
+            <param name="tb">数据库表名</param>  
+            <param name="connKey">连接数据库的key</param>  
+            <returns></returns>  
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.ExecuteNonQuery(System.String,System.String)">
+            <summary>
+            执行SQL语句并返回影响数据库中的行数
+            </summary>
+            <param name="sql">SQL</param>
+            <param name="connStr">连接字符串</param>
+            <returns>返回影响数据库中的行数</returns>
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.Select_count(System.String,System.String)">
+            <summary>
+            执行的SELECT是否返回行
+            </summary>
+            <param name="sql">select语句需要count()</param>
+            <param name="connStr">连接字符串</param>
+            <returns>true-有行数 false-无行数</returns>
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.IsDBExist(System.String,System.String)">
+            <summary>  
+            判断数据库是否存在  
+            </summary>  
+            <param name="db">数据库的名称</param>  
+            <param name="connKey">数据库的连接Key</param>  
+            <returns>true:表示数据库已经存在；false，表示数据库不存在</returns>  
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.CreateDataBase(System.String,System.String)">
+            <summary>  
+            创建数据库  
+            </summary>  
+            <param name="db">数据库名称</param>  
+            <param name="connKey">连接数据库的key</param>  
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.CreateDataTable(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
+             <summary>  
+            在指定的数据库中，创建数据库表  
+             </summary>  
+             <param name="db">指定的数据库</param>  
+             <param name="dt">要创建的数据库表</param>  
+             <param name="dic">数据表中的字段及其数据类型</param>  
+             <param name="connKey">数据库的连接Key</param>  
+             <returns>成功返回“ok” 失败返回“报错信息”</returns>
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.DropDataTable(System.String,System.Collections.Generic.List{System.String},System.String)">
+            <summary>  
+            批量删除数据库  
+            </summary>  
+            <param name="db">指定的数据库</param>  
+            <param name="dt">要删除的数据库表集合</param>  
+            <param name="connKey">数据库连接串</param>  
+            <returns>删除是否成功，true表示删除成功，false表示删除失败</returns>  
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.DropDataBase(System.String,System.String)">
+            <summary>  
+            删除数据库  
+            </summary>  
+            <param name="db">数据库名</param>  
+            <param name="connKey">数据库连接串</param>  
+            <returns>删除成功为true，删除失败为false</returns>  
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.CreateDataTable(System.String,System.String[],System.Collections.Generic.List{System.Collections.Generic.Dictionary{System.String,System.String}},System.String)">
+            <summary>  
+             在指定的数据库中，创建数据表  
+            </summary>  
+            <param name="db">指定的数据库</param>  
+            <param name="dt">要创建的数据表集合</param>  
+            <param name="dic">数据表中的字段及其数据类型  Dictionary集合</param>  
+            <param name="connKey">数据库的连接Key</param>  
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.PinjieSql(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>  
+            拼接创建数据库表的Sql语句  
+            </summary>  
+            <param name="db">指定的数据库</param>  
+            <param name="dt">要创建的数据表</param>  
+            <param name="dic">数据表中的字段及其数据类型</param>  
+            <returns>拼接完的字符串</returns>  
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.select_data(System.String,System.String)">
+            <summary>
+            查询数据库并返回dt
+            </summary>
+            <param name="sql">sql字符串</param>
+            <param name="connStr">连接字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.SQLSERVER.SqlServer_tool.sys_datatable(System.String)">
+            <summary>
+            返回数据库表的结构的SQL字符串
+            </summary>
+            <param name="datatable_name">数据库表名</param>
+            <returns>输入表的结构</returns>
+        </member>
+        <member name="T:Helper.Transformation.Transformation">
+            <summary>
+            实体,List集合,DataTable相互转换用类
+            </summary>
+        </member>
+        <member name="T:Helper.Transformation.Transformation.DataConvert">
+            <summary>  
+            数据转换类  
+            说明    ：实体,List集合,DataTable相互转换<br/>  
+            </summary>  
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.DataRowToModel``1(System.Data.DataRow)">
+            <summary>  
+            DataRow转实体  
+            </summary>  
+            <typeparam name="T">数据型类</typeparam>  
+            <param name="dr">DataRow</param>  
+            <returns>模式</returns>  
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.DataTableToList``1(System.Data.DataTable)">
+            <summary>  
+            DataTable转List 
+            </summary>  
+            <typeparam name="T">数据项类型</typeparam>  
+            <param name="dt">DataTable</param>  
+            <returns>List数据集</returns>  
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.DataReaderToModel``1(System.Data.IDataReader)">
+            <summary>  
+            DataReader转实体  
+            </summary>  
+            <typeparam name="T">数据类型</typeparam>  
+            <param name="dr">DataReader</param>  
+            <returns>实体</returns>  
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.DataReaderToList``1(System.Data.IDataReader)">
+            <summary>  
+            DataReader转List 
+            </summary>  
+            <typeparam name="T">数据类型</typeparam>  
+            <param name="dr">DataReader</param>  
+            <returns>List数据集</returns>  
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.ListToDataTable``1(System.Collections.Generic.IList{``0})">
+            <summary>  
+            泛型集合转DataTable  
+            </summary>  
+            <typeparam name="T">集合类型</typeparam>  
+            <param name="entityList">泛型集合</param>  
+            <returns>DataTable</returns>  
+        </member>
+        <member name="T:Helper.Transformation.Transformation.DataConvert.DBColumn">
+            <summary>  
+            数据库字段对应属性类  
+            说明    ：数据库字段对应属性类<br/>  
+            作者    ：niu<br/>  
+            创建时间：2011-07-21<br/>  
+            最后修改：2011-07-21<br/>  
+            </summary>  
+        </member>
+        <member name="P:Helper.Transformation.Transformation.DataConvert.DBColumn.ColName">
+            <summary>  
+            数据库字段  
+            </summary>  
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.Dtb2Json(System.Data.DataTable)">
+            <summary>
+            将datatable转换为json  
+            </summary>
+            <param name="dtb">Dt</param>
+            <returns>JSON字符串</returns>
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.JsonToDataTable(System.String)">
+            <summary>
+            将json转换为DataTable
+            </summary>
+            <param name="strJson">得到的json</param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.ToJson(System.Data.DataSet)">
+            <summary>    
+            DataSet转换为Json   
+            </summary>    
+            <param name="dataSet">DataSet对象</param>   
+            <returns>Json字符串</returns>    
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.EntityToEntity(System.Object,System.Object,System.String[])">
+            <summary>
+            将一个实体类复制到另一个实体类
+            </summary>
+            <param name="objectsrc">源实体类</param>
+            <param name="objectdest">复制到的实体类</param>
+            <param name="excudeFields">不复制的属性</param>
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.GetDgvToTable(System.Windows.Forms.DataGridView)">
+            <summary>
+            将DataGridView数据转换到DataTable
+            </summary>
+            <param name="dgv">复制数据的DataGridView</param>
+            <returns>返回的绑定数据后的DataTable</returns>
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.ConvertToDataTable``1(System.Collections.Generic.List{``0})">
+            <summary>
+            将List(包括匿名类)转为datatable
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="items"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.IsNullable(System.Type)">
+            <summary>
+            Determine of specified type is nullable
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Helper.Transformation.Transformation.DataConvert.GetCoreType(System.Type)">
+            <summary>
+            Return underlying type if type is Nullable otherwise return the type.
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

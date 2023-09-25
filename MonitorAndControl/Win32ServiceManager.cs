@@ -35,6 +35,7 @@ using Newtonsoft.Json.Linq;
 using System.Web;
 using System.Collections.Specialized;
 using System.Runtime.Remoting.Messaging;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MonitorAndControl
 {
@@ -48,19 +49,19 @@ namespace MonitorAndControl
 
         #region Windows服务
         public Win32ServiceManager(string host, string userName, string password)
-        {    
-            
+        {
+
             this.strPath = "\\\\" + host + "\\root\\cimv2:Win32_Service";
             this.managementClass = new ManagementClass(strPath);
-            string key=System.Text.RegularExpressions.Regex.Replace(host, @"[^0-9]+", "");
+            string key = System.Text.RegularExpressions.Regex.Replace(host, @"[^0-9]+", "");
             if (userName != null && userName.Length > 0)
             {
                 ConnectionOptions connectionOptions = new ConnectionOptions();
-                
+
                 connectionOptions.Username = DBCon.DBUtility.DESEncrypt.Decrypt(userName, key);
                 connectionOptions.Password = DBCon.DBUtility.DESEncrypt.Decrypt(password, key);
 
-                
+
                 ManagementScope managementScope = new ManagementScope("\\\\" + host + "\\root\\cimv2", connectionOptions);
                 this.managementClass.Scope = managementScope;
             }
@@ -70,7 +71,7 @@ namespace MonitorAndControl
         {
             string key = System.Text.RegularExpressions.Regex.Replace(host, @"[^0-9]+", "");
             ConnectionOptions connectionOptions = new ConnectionOptions();
-            
+
             connectionOptions.Username = DBCon.DBUtility.DESEncrypt.Decrypt(userName, key);
             connectionOptions.Password = DBCon.DBUtility.DESEncrypt.Decrypt(password, key);
             ManagementScope managementScope = new ManagementScope("" + host + "//root//cimv2", connectionOptions);
@@ -106,7 +107,7 @@ namespace MonitorAndControl
             }
             //if (services[i, 2] != "Running")
             //{
-                
+
             //    StartService(services[i, 0]);
 
             //    services[i, 2] = "已尝试重启";
@@ -244,9 +245,9 @@ namespace MonitorAndControl
         /// <param name="strIp">服务器IP地址</param>
         /// <param name="ResultSource">0自动，1手动</param>
         /// <returns></returns>
-        public string CmdPing(string strIp,int ResultSource)
+        public string CmdPing(string strIp, int ResultSource)
         {
-            Process p = new Process(); 
+            Process p = new Process();
             p.StartInfo.FileName = "cmd.exe";//设定程序名
             p.StartInfo.UseShellExecute = false; //关闭Shell的使用
             p.StartInfo.RedirectStandardInput = true;//重定向标准输入
@@ -254,26 +255,26 @@ namespace MonitorAndControl
             p.StartInfo.RedirectStandardError = true;//重定向错误输出
             p.StartInfo.CreateNoWindow = true;//设置不显示窗口
 
-            string pingrst; 
-            p.Start(); 
+            string pingrst;
+            p.Start();
             p.StandardInput.WriteLine("ping " + strIp);
             p.StandardInput.WriteLine("exit");
 
             string strRst = p.StandardOutput.ReadToEnd();
-            if (strRst.IndexOf("无法访问目标主机") != -1) {pingrst = "无法到达目的主机";}
-            else if (strRst.IndexOf("(0% loss)") != -1){pingrst = "连接";}
-            else if (strRst.IndexOf("(0% 丢失)") != -1){pingrst = "连接";}
-            else if (strRst.IndexOf("Destination host unreachable.") != -1){pingrst = "无法到达目的主机";}
-            else if (strRst.IndexOf("一般故障。") != -1){pingrst = "无法到达目的主机";}
-            else if (strRst.IndexOf("Request timed out.") != -1){pingrst = "超时";}
-            else if (strRst.IndexOf("请求超时。") != -1){pingrst = "超时";}
-            else if (strRst.IndexOf("Unknown host") != -1){pingrst = "无法解析主机";}
-            else if (strRst.IndexOf("请求找不到主机") != -1){pingrst = "无法解析主机";}
-            else{pingrst = strRst;}
+            if (strRst.IndexOf("无法访问目标主机") != -1) { pingrst = "无法到达目的主机"; }
+            else if (strRst.IndexOf("(0% loss)") != -1) { pingrst = "连接"; }
+            else if (strRst.IndexOf("(0% 丢失)") != -1) { pingrst = "连接"; }
+            else if (strRst.IndexOf("Destination host unreachable.") != -1) { pingrst = "无法到达目的主机"; }
+            else if (strRst.IndexOf("一般故障。") != -1) { pingrst = "无法到达目的主机"; }
+            else if (strRst.IndexOf("Request timed out.") != -1) { pingrst = "超时"; }
+            else if (strRst.IndexOf("请求超时。") != -1) { pingrst = "超时"; }
+            else if (strRst.IndexOf("Unknown host") != -1) { pingrst = "无法解析主机"; }
+            else if (strRst.IndexOf("请求找不到主机") != -1) { pingrst = "无法解析主机"; }
+            else { pingrst = strRst; }
             //记录时间
             p.Close();
 
-            if (pingrst != "连接") 
+            if (pingrst != "连接")
             {
                 Thread.Sleep(5000);
                 Process p1 = new Process();
@@ -283,7 +284,7 @@ namespace MonitorAndControl
                 p1.StartInfo.RedirectStandardOutput = true;//重定向标准输出
                 p1.StartInfo.RedirectStandardError = true;//重定向错误输出
                 p1.StartInfo.CreateNoWindow = true;//设置不显示窗口
-                
+
                 p1.Start();
                 p1.StandardInput.WriteLine("ping " + strIp);
                 p1.StandardInput.WriteLine("exit");
@@ -384,7 +385,7 @@ namespace MonitorAndControl
             ArrayList SQLlist = new ArrayList();
 
             //1 ping
-            string s = CmdPing(ServerIP,1);
+            string s = CmdPing(ServerIP, 1);
 
 
             //这里先写入一行ping的日志
@@ -392,7 +393,7 @@ namespace MonitorAndControl
 
             for (int j = 0; j < dt.Rows.Count; j++)
             {
-                
+
                 StringBuilder cmd_ping = new StringBuilder();
                 cmd.Clear();
                 cmd.AppendLine(" INSERT INTO Service_Record ");
@@ -407,7 +408,7 @@ namespace MonitorAndControl
                 cmd.AppendLine("            ,[ResultSource] ");
                 cmd.AppendLine("            ,[CheckResult]) ");
                 cmd.AppendLine("      VALUES ");
-                cmd.AppendLine("            ("+ dt.Rows[j]["id"].ToString().Trim() + ",'" + ServerIP + "' ");
+                cmd.AppendLine("            (" + dt.Rows[j]["id"].ToString().Trim() + ",'" + ServerIP + "' ");
                 cmd.AppendLine("            ," + dt.Rows[j]["CheckType"].ToString().Trim() + " ");
                 cmd.AppendLine("            ," + dt.Rows[j]["SvrUser"].ToString().Trim() + " ");
                 cmd.AppendLine("            ," + dt.Rows[j]["SvrPwd"].ToString().Trim() + " ");
@@ -427,11 +428,11 @@ namespace MonitorAndControl
 
                     Array aaaa = GetServiceList(ServerIP, dt.Rows[j]["SvrUser"].ToString().Trim(), dt.Rows[j]["SvrPwd"].ToString().Trim(), dt.Rows[j]["CheckItem"].ToString().Trim());
                     ResultString = aaaa.GetValue(0, 2).ToString().Trim();
-                    
+
                 }
                 else if (Convert.ToInt16(dt.Rows[j]["CheckType"]) == 1)//如果是Port
                 {
-                    ResultString = TcpClientCheck(ServerIP, Convert.ToInt32(dt.Rows[j]["CheckItem"].ToString().Trim()),1);
+                    ResultString = TcpClientCheck(ServerIP, Convert.ToInt32(dt.Rows[j]["CheckItem"].ToString().Trim()), 1);
                 }
                 cmd.AppendLine("            ,'" + ResultString + "') ");
                 SQLlist.Add(cmd.ToString());
@@ -460,7 +461,7 @@ namespace MonitorAndControl
         /// <param name="ServerPassWord">密码</param>
         /// <param name="CheckItem">服务名称</param>
         /// <returns>Array</returns>
-        public Array GetServiceList(string ServerIP,string ServerUserName, string ServerPassWord,   string CheckItem)
+        public Array GetServiceList(string ServerIP, string ServerUserName, string ServerPassWord, string CheckItem)
         {
             Win32ServiceManager servicecheck = new Win32ServiceManager(ServerIP, ServerUserName, ServerPassWord);
             Array aaaa = servicecheck.GetServiceList(CheckItem);
@@ -469,7 +470,7 @@ namespace MonitorAndControl
         #endregion
 
         #region 端口检测
-        public string TcpClientCheck(string ip, int port,int ResultSource)
+        public string TcpClientCheck(string ip, int port, int ResultSource)
         {
             IPAddress ipa = IPAddress.Parse(ip);
             IPEndPoint point = new IPEndPoint(ipa, port);
@@ -481,11 +482,11 @@ namespace MonitorAndControl
             a.Inactive = 1;
             a.PriorityLevel = 0;
             a.ResultSource = ResultSource;
-            
+
             a.ExecutionComputer = DBConn.DataAcess.SqlConn.GetMachineName();
             a.ExecutionIP = DBConn.DataAcess.SqlConn.GetLocalIP();
             a.ExecutionTime = DateTime.Now.ToString();
-            
+
             try
             {
                 tcp = new TcpClient();
@@ -566,7 +567,7 @@ namespace MonitorAndControl
             if (dt.Rows.Count > 0) //如果有，就激活
             {
                 string updatestring = "UPDATE Service_ServerList SET Inactive=1 WHERE id=" + dt.Rows[0]["id"].ToString().Trim();
-                return Convert.ToInt32(dt.Rows[0]["id"].ToString().Trim()); 
+                return Convert.ToInt32(dt.Rows[0]["id"].ToString().Trim());
             }
             else //如果没有就添加
             {
@@ -642,7 +643,7 @@ namespace MonitorAndControl
             catch (Exception ex)
             {
                 throw ex;
-            }           
+            }
         }
         #endregion
 
@@ -677,7 +678,7 @@ namespace MonitorAndControl
             cmd.AppendLine("   where b.Inactive=1 ");
             cmd.AppendLine("   order by a.ServerIP,a.CheckType,a.CheckItem,b.PriorityLevel ");
             cmd.AppendLine("   ");
-            return DBConn.DataAcess.SqlConn.Query(cmd.ToString()).Tables[0];           
+            return DBConn.DataAcess.SqlConn.Query(cmd.ToString()).Tables[0];
         }
         #endregion
 
@@ -709,7 +710,7 @@ namespace MonitorAndControl
             cmd.AppendLine("   FROM Service_Record a ");
             cmd.AppendLine("   left join Service_ServerList b  ");
             cmd.AppendLine("   on a.ServerIP=b.ServerIP and a.CheckType=b.CheckType and a.CheckItem=b.CheckItem ");
-            cmd.AppendLine("   where b.Inactive=1 and a.ServerIP='"+ ServerIP + "'");
+            cmd.AppendLine("   where b.Inactive=1 and a.ServerIP='" + ServerIP + "'");
             cmd.AppendLine("   order by a.ServerIP,a.CheckType,a.CheckItem,b.PriorityLevel ");
             cmd.AppendLine("   ");
             return DBConn.DataAcess.SqlConn.Query(cmd.ToString()).Tables[0];
@@ -723,13 +724,13 @@ namespace MonitorAndControl
         /// <returns></returns>
         public List<ServerCheckItem> GetItem()
         {
-            
+
             string cmd = "select Service_ServerList.id as ServerID, Service_ServerList.ServerIP,Service_ServerList.CheckType,Service_ServerList.SvrUser,Service_ServerList.SvrPwd,Service_ServerList.CheckItem,Inactive,PriorityLevel,TestInterval,CheckResult,case  when ExecutionTime is NULL then  '2023-01-01 00:00:00.000' else ExecutionTime end as ExecutionTime,ExecutionComputer ,ExecutionIP,ResultSource  \r\nfrom Service_ServerList left join  (select * from(SELECT ROW_NUMBER() over(partition by serverlistid order by id desc) as rowNum ,[ServerListID],[ServerIP],[CheckType],[CheckItem],[CheckResult],[ExecutionTime],[ExecutionComputer],[ExecutionIP],[ResultSource] FROM Service_Record) temp\r\nwhere temp.rowNum = 1) a on Service_ServerList.id = a.ServerListID where inactive=1 order by serverip,checktype,prioritylevel";
-            DataTable dt= DBConn.DataAcess.SqlConn.Query(cmd).Tables[0];
-            
+            DataTable dt = DBConn.DataAcess.SqlConn.Query(cmd).Tables[0];
+
             List<ServerCheckItem> serverCheckItems = new List<ServerCheckItem>();
-            if (dt.Rows.Count> 0)
-            {   
+            if (dt.Rows.Count > 0)
+            {
                 serverCheckItems = dt.ToDataList<ServerCheckItem>();
                 //for (int i = 0; i < serverCheckItems.Count-1; i++)
                 //{
@@ -747,7 +748,7 @@ namespace MonitorAndControl
         /// <returns></returns>
         public List<ServerCheckItem> GetItem(string ServerIP)
         {
-            string cmd = "SELECT id as ServerID      ,ServerIP      ,CheckType      ,CheckItem      ,Inactive      ,PriorityLevel      ,TestInterval,'' as CheckResult,'' as ExecutionTime,'' as ExecutionComputer ,'' as ExecutionIP,0 as ResultSource  FROM Service_ServerList where inactive=1 and ServerIP='"+ ServerIP + "' order by serverip,checktype,prioritylevel";
+            string cmd = "SELECT id as ServerID      ,ServerIP      ,CheckType      ,CheckItem      ,Inactive      ,PriorityLevel      ,TestInterval,'' as CheckResult,'' as ExecutionTime,'' as ExecutionComputer ,'' as ExecutionIP,0 as ResultSource  FROM Service_ServerList where inactive=1 and ServerIP='" + ServerIP + "' order by serverip,checktype,prioritylevel";
             DataTable dt = DBConn.DataAcess.SqlConn.Query(cmd).Tables[0];
             List<ServerCheckItem> serverCheckItems = dt.ToDataList<ServerCheckItem>();
 
@@ -786,7 +787,7 @@ namespace MonitorAndControl
                 {
                     message = "正常";
                 }
-                ServerCheckItem.CheckResult = message;
+                ServerCheckItem.CheckResult = message.Replace("/r", "");
             }
             else if (ServerCheckItem.CheckType == -3)
             {
@@ -800,7 +801,7 @@ namespace MonitorAndControl
                 //a = "异常 已恢复";
                 //a = "异常 未能恢复";
                 //a =  "异常 没有找到这个服务"
-                
+
             }
             else if (ServerCheckItem.CheckType == -4)
             {
@@ -808,19 +809,27 @@ namespace MonitorAndControl
                 int _port = (int)Convert.ToInt64(strArray[0]);
                 string _path = strArray[1];
                 DiskInfo diskInfo = new DiskInfo();
-                diskInfo = LinuxGetFolderDiskInfo(ServerCheckItem.ServerIP,_port,ServerCheckItem.SvrUser,ServerCheckItem.SvrPwd,_path);
-                
-                
-                string result = System.Text.RegularExpressions.Regex.Replace(diskInfo.Use.ToString(), @"[^0-9]+", "");
-                float b = Convert.ToSingle(result);
-                if (b < 15)
+                diskInfo = LinuxGetFolderDiskInfo(ServerCheckItem.ServerIP, _port, ServerCheckItem.SvrUser, ServerCheckItem.SvrPwd, _path);
+
+                if (diskInfo.Use == "0")
                 {
-                    ServerCheckItem.CheckResult = diskInfo.Use.ToString();
+                    ServerCheckItem.CheckResult = "无法连接或没有此目录";
                 }
                 else
                 {
-                    ServerCheckItem.CheckResult = "正常";
+                    string result = System.Text.RegularExpressions.Regex.Replace(diskInfo.Use.ToString(), @"[^0-9]+", "");
+                    float b = Convert.ToSingle(result);
+                    if (b < 15)
+                    {
+                        ServerCheckItem.CheckResult = diskInfo.Use.ToString();
+                    }
+                    else
+                    {
+                        ServerCheckItem.CheckResult = "正常";
+                    }
                 }
+
+
 
             }
             else
@@ -834,15 +843,13 @@ namespace MonitorAndControl
             ServerCheckItem.ResultSource = 0;
             SaveRecord(ServerCheckItem);
             try
-            {                
+            {
                 return ServerCheckItem;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-
-
         }
         public ServerCheckItem SaveRecord(ServerCheckItem ServerCheckItem)
         {
@@ -863,7 +870,7 @@ namespace MonitorAndControl
             cmd.AppendLine("            ,'" + ServerCheckItem.ServerIP + "' ");
             cmd.AppendLine("            ," + ServerCheckItem.CheckType + " ");
             cmd.AppendLine("            ,'" + ServerCheckItem.CheckItem + "'  ");
-            cmd.AppendLine("            ,'" + ServerCheckItem.CheckResult + "' ");
+            cmd.AppendLine("            ,'" + ServerCheckItem.CheckResult.Replace("/r", "") + "' ");
             cmd.AppendLine("            ,'" + ServerCheckItem.ExecutionTime + "' ");
             cmd.AppendLine("            ,'" + ServerCheckItem.ExecutionComputer + "' ");
             cmd.AppendLine("            ,'" + ServerCheckItem.ExecutionIP + "'  ");
@@ -879,8 +886,6 @@ namespace MonitorAndControl
             }
 
         }
-
-
         #endregion
 
         /// <summary>
@@ -890,15 +895,18 @@ namespace MonitorAndControl
         public string GetRandomWords()
         {
             string cmd = "SELECT TOP 1 Words FROM RandomWords ORDER BY NEWID()";
-            DataTable dt= DBConn.DataAcess.SqlConn.Query(cmd.ToString()).Tables[0];
-            if (dt.Rows.Count == 0){
+            DataTable dt = DBConn.DataAcess.SqlConn.Query(cmd.ToString()).Tables[0];
+            if (dt.Rows.Count == 0)
+            {
                 return "没毛病";
-            }else{
+            }
+            else
+            {
                 return dt.Rows[0]["words"].ToString();
             }
         }
 
-         
+
 
         public class ServerCheckItem
         {
@@ -1015,7 +1023,7 @@ namespace MonitorAndControl
         /// <param name="_disksrc">盘符 只写盘符不需要冒号</param>
         /// <param name="_threshold">阈值 小于多少GB报警</param>
         /// <returns></returns>
-        private string GetDiskSize(string _ip, string _username, string _password, string _disksrc,string _threshold)
+        private string GetDiskSize(string _ip, string _username, string _password, string _disksrc, string _threshold)
         {
             //ip = textBoxSrcPath.Text;//"172.16.5.214";
             //disksrc = textBoxDirPath.Text + ":";//"D:";
@@ -1056,7 +1064,15 @@ namespace MonitorAndControl
 
             ManagementScope scope = new ManagementScope(path, connectionOptions);
 
-            scope.Connect();
+            try
+            {
+                scope.Connect();
+            }
+            catch (Exception ex)
+            {
+                return "异常 无法连接到主机";
+            }
+
 
             //查询字符串，某磁盘上信息
 
@@ -1081,7 +1097,7 @@ namespace MonitorAndControl
             if (freesize <= threshold)
             {
 
-                messagea = messagea + "可用空间" + freesize + "GB";
+                messagea = "异常 " + disksrc + "\\ 可用空间" + freesize + "GB ";
             }
 
             return messagea;
@@ -1145,18 +1161,26 @@ namespace MonitorAndControl
         {
             string a = "";
             string key = System.Text.RegularExpressions.Regex.Replace(_hostname, @"[^0-9]+", "");
-            string username = DBCon.DBUtility.DESEncrypt.Decrypt(_username,key);
+            string username = DBCon.DBUtility.DESEncrypt.Decrypt(_username, key);
             string password = DBCon.DBUtility.DESEncrypt.Decrypt(_password, key);
 
             using (var client = new Renci.SshNet.SshClient(_hostname, _port, username, password))
             {
 
+                //try
+                //{
                 // 连接到 SSH 服务器
                 client.Connect();
-                
+                //}
+                //catch (Exception ex)
+                //{  
+                //    return "异常 主机无法连接";
+                //}
+
                 // 在此处执行 SSH 操作...                
                 try
                 {
+
                     if (string.IsNullOrEmpty(_ServiceName))
                     {
                         return a;
@@ -1177,7 +1201,7 @@ namespace MonitorAndControl
                         {
                             a = "获取状态失败";
                         }
-                        else 
+                        else
                         {
                             string ServiceStatus = MidStrEx(arr[2].Trim(), " (", ") ");
                             if (ServiceStatus == "running")
@@ -1186,13 +1210,13 @@ namespace MonitorAndControl
                             }
                             else
                             {
-                                var commandResult_ServiceRestartStatus1=client.RunCommand(string.Format("systemctl restart {0}", _ServiceName));
+                                var commandResult_ServiceRestartStatus1 = client.RunCommand(string.Format("systemctl restart {0}", _ServiceName));
                                 Thread.Sleep(3000);
                                 var commandResult_ServiceRestartStatus = client.RunCommand(string.Format("systemctl status {0}", _ServiceName));
                                 string m4 = commandResult_ServiceRestartStatus.Result;
                                 string[] arr_r = m4.Split('\n');
                                 string ServiceRestartStatus = MidStrEx(arr_r[2].Trim(), " (", ") ");
-                                
+
                                 if (ServiceRestartStatus == "running")
                                 {
                                     a = "异常 已恢复";
@@ -1203,7 +1227,7 @@ namespace MonitorAndControl
                                 }
                             }
                         }
-                     
+
                     }
 
                     return a;
@@ -1237,7 +1261,7 @@ namespace MonitorAndControl
             }
             catch (Exception ex)
             {
-                //Log.WriteLog("MidStrEx Err:" + ex.Message);
+                return ex.Message;
             }
             return result;
         }
@@ -1249,16 +1273,33 @@ namespace MonitorAndControl
 
         public DiskInfo LinuxGetFolderDiskInfo(string hostname, int port, string username, string password, string path)
         {
+            DiskInfo disk = new DiskInfo();
+            if (CmdPing(hostname,0)!="连接")
+            {
+                disk.Use = "0";
+                return disk;
+            }
+
             using (var client = new Renci.SshNet.SshClient(hostname, port, DBCon.DBUtility.DESEncrypt.Decrypt(username, System.Text.RegularExpressions.Regex.Replace(hostname, @"[^0-9]+", "")), DBCon.DBUtility.DESEncrypt.Decrypt(password, System.Text.RegularExpressions.Regex.Replace(hostname, @"[^0-9]+", ""))))
             {
                 // 连接到 SSH 服务器
+                //try 
+                //{
                 client.Connect();
-                DiskInfo disk = new DiskInfo();
+                //}
+                //catch (Exception ex)
+                //{
+                //    disk.Use = "0";
+                //    return disk;
+                //}
+
+
                 // 在此处执行 SSH 操作...                
                 try
                 {
                     if (string.IsNullOrEmpty(path))
                     {
+                        disk.Use = "0";
                         return disk;
                     }
                     if (!path.StartsWith("/"))
@@ -1272,7 +1313,7 @@ namespace MonitorAndControl
                     var commandResult_df_k = client.RunCommand(string.Format("df -k {0} |", path) + printLine);
                     string m3 = commandResult_df_k.Result;
 
-                    string[] arr= m3.Split('\n');
+                    string[] arr = m3.Split('\n');
                     if (arr.Length == 0)
                     {
                         return disk;
@@ -1293,11 +1334,12 @@ namespace MonitorAndControl
                     // 断开 SSH 连接
                     client.Disconnect();
                     //logger.Error(ex);
+                    disk.Use = "0";
                     return disk;
                 }
-            }      
+            }
         }
-     
+
         /// <summary>
         /// Linux磁盘信息
         /// </summary>
@@ -1436,45 +1478,45 @@ namespace MonitorAndControl
         {
 
             string resultstr = "";
-            //// 创建一个Web请求
-            //HttpWebRequest request = WebRequest.Create("http://kr1.sickkle.com/joke") as HttpWebRequest;
+            //创建一个Web请求
+            HttpWebRequest request = WebRequest.Create("http://kr1.sickkle.com/joke") as HttpWebRequest;
 
 
 
 
-            //// 获取Web服务器输出的数据
-            //using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            //{
-                //// 取得输出流
-                //StreamReader reader = new StreamReader(response.GetResponseStream());
-                //string a = reader.ReadToEnd();
+            // 获取Web服务器输出的数据
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                // 取得输出流
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                string a = reader.ReadToEnd();
 
 
 
 
                 //JavaScriptSerializer js = new JavaScriptSerializer();   //实例化一个能够序列化数据的类
 
-                //Joke list = js.Deserialize<Joke>(a);    //将json数据转化为对象类型并赋值给list
-                ////string msg = list.msg;
-                //string msg = "443eb1614f2f4188fe49e6127a3901";
-                //string sign = list.sign;
-                //string key = "5a75d5ec839a8f1ed686f0ddb67d5f09";
-                //string iv = "f244ef6f0accec87";
-                //byte[] msg1 = Convert.FromBase64String(msg);
-                //byte[] key1 = System.Text.Encoding.Default.GetBytes(key);
+                // Joke list = js.Deserialize<Joke>(a);    //将json数据转化为对象类型并赋值给list
+                // //string msg = list.msg;
+                // string msg = "443eb1614f2f4188fe49e6127a3901";
+                // string sign = list.sign;
+                // string key = "5a75d5ec839a8f1ed686f0ddb67d5f09";
+                // string iv = "f244ef6f0accec87";
+                // byte[] msg1 = Convert.FromBase64String(msg);
+                // byte[] key1 = System.Text.Encoding.Default.GetBytes(key);
+                // byte[] iv1 = System.Text.Encoding.Default.GetBytes(iv);
                 //byte[] iv1 = System.Text.Encoding.Default.GetBytes(iv);
-                ////byte[] iv1 = System.Text.Encoding.Default.GetBytes(iv);
 
 
                 //string sign1 = DBConn.DBUtility.MD5Helper.md5(msg + iv);
                 //if (sign1 == sign)
-                //{                    
-                //   //string b = DBConn.DBUtility.AESEncrypt.DecryptAES256(msg,key,iv);
-                //}                
+                //{
+                //    string b = DBConn.DBUtility.AESEncrypt.DecryptAES256(msg,key,iv);
+                //}
                 //resultstr = msg;
-                return resultstr;
+                //return resultstr;
 
-
+                return a;
 
                 //{ "msg":"efcf72a487f9855214d40286e7eef451399d8d0b4e8c10394bf508d1b83a4d4c1df069e769851d06edd2c54b094388e810b131f47c853807ef578bd097cc69ecc8fbd8e5b80c6095fa06030f47036fdb929e73c428f530b7751bc66d9eb99bc035a0006af81eb3d2e08774d549","sign":"dc3479ff294fbb89de0beeb38747636f"}
 
@@ -1495,12 +1537,13 @@ namespace MonitorAndControl
             public string msg { get; set; }
 
             public string sign { get; set; }
-            
+
         }
-     
+
         #endregion
 
     }
+}
 
 
 

@@ -28,6 +28,7 @@ using static MonitorAndControl.Win32ServiceManager;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Action = System.Action;
+using NPOI; 
 
 namespace MonitorAndControl
 {
@@ -383,7 +384,7 @@ namespace MonitorAndControl
                 string[] strArray = ServerCheckItem.CheckItem.ToString().Trim().Split('!');
                 string _disksrc = strArray[0];
                 string _threshold = strArray[1];
-                messagem = messagem + "\r\n" + "Windows磁盘：" + ServerCheckItem.ServerIP + "的" + _disksrc + "盘不足" + _threshold + "GB 可用空间" + ServerCheckItem.CheckResult.ToString() + "GB " + ServerCheckItem.ExecutionTime;
+                messagem = messagem + "\r\n" + "Windows磁盘：" + ServerCheckItem.ServerIP + " " + ServerCheckItem.CheckResult.ToString() + ServerCheckItem.ExecutionTime;
             }
             if (ServerCheckItem.CheckType == -3 && ServerCheckItem.CheckResult != "正常")
             {
@@ -800,69 +801,23 @@ namespace MonitorAndControl
             //string a=wsm.LinuxGetServicesInfo("172.16.1.99", 2263, "root", "Rainoo5683@", "mysql");
             string Joke = wsm.GetJoke();
         }
-        string TextToEncrypt = "443eb1614f2f4188fe49e6127a3901";
-        static string strKey = "5a75d5ec839a8f1ed686f0ddb67d5f09";
-        static string strIV = "f244ef6f0accec87";
+
         private void getJokeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Win32ServiceManager wsm = new Win32ServiceManager();
-            //string a = wsm.GetJoke();
-
-            string aaa = "let me cats you";
-            
-            string a= DBConn.DBUtility.AESEncrypt.Encrypt(aaa, strKey, strIV);
-
-            string b= DBConn.DBUtility.AESEncrypt.Decrypt(TextToEncrypt, strKey, strIV);
-
-
-
-
-
-
-
+            string RandomWords = wsm.GetJoke();
+            new WeCom().SendToWeCom(
+                    RandomWords,
+                    "wwed1606c46cbfc117"
+                    , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
+                    "1000002", "2"
+                    );
         }
-    
 
-        //protected string DecryptByAES()
-        //{
-        //    string ciphertextHex = "443eb1614f2f4188fe49e6127a3901"; // 替换为实际的16进制密文
-        //    string ivHex = "f244ef6f0accec87";
-        //    string keyHex = "5a75d5ec839a8f1ed686f0ddb67d5f09";
-
-        //    byte[] ciphertext = HexToByteArray(ciphertextHex);
-        //    byte[] iv = HexToByteArray(ivHex);
-        //    byte[] key = HexToByteArray(keyHex);
-
-        //    using (Aes aes = Aes.Create())
-        //    {
-        //        aes.KeySize = 256;
-        //        aes.BlockSize = 128;
-        //        aes.Key = key;
-        //        aes.IV = iv;
-        //        aes.Mode = CipherMode.CFB;
-        //        aes.Padding = PaddingMode.None;
-
-        //        using (ICryptoTransform decryptor = aes.CreateDecryptor())
-        //        {
-        //            byte[] decryptedBytes = decryptor.TransformFinalBlock(ciphertext, 0, ciphertext.Length);
-        //            string decryptedText = Encoding.UTF8.GetString(decryptedBytes);
-        //            Console.WriteLine("Decrypted Text: " + decryptedText);
-        //            return decryptedText;
-        //        }
-        //    }
-           
-        //}
-
-        //private static byte[] HexToByteArray(string hex)
-        //{
-        //    int length = hex.Length;
-        //    byte[] bytes = new byte[length / 2];
-        //    for (int i = 0; i < length; i += 2)
-        //    {
-        //        bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-        //    }
-        //    return bytes;
-        //}
+        private void nPOIToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+             
+        }
     }
 }
 

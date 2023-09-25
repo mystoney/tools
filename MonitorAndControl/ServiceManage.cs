@@ -160,7 +160,8 @@ namespace MonitorAndControl
 
         private void combo_ServiceName_User_KeyPress(object sender, KeyPressEventArgs e)
         {
-                if (char.IsLetterOrDigit(e.KeyChar) || e.KeyChar == 8)
+            //允许输入字母 数字 退格键 和 字符$ 如果是不允许 请使用System.Text.RegularExpressions.Regex.IsMatch(e.KeyChar.ToString(), @"[^\$]")多了一个^
+            if (char.IsLetterOrDigit(e.KeyChar) || e.KeyChar == 8 || System.Text.RegularExpressions.Regex.IsMatch(e.KeyChar.ToString(), @"[\$]"))
                     e.Handled = false;
                 else
                     e.Handled = true;
