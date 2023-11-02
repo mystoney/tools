@@ -1064,6 +1064,7 @@ namespace MonitorAndControl
 
             ManagementScope scope = new ManagementScope(path, connectionOptions);
 
+#pragma warning disable CS0168 // 声明了变量，但从未使用过
             try
             {
                 scope.Connect();
@@ -1072,6 +1073,7 @@ namespace MonitorAndControl
             {
                 return "异常 无法连接到主机";
             }
+#pragma warning restore CS0168 // 声明了变量，但从未使用过
 
 
             //查询字符串，某磁盘上信息
@@ -1295,6 +1297,7 @@ namespace MonitorAndControl
 
 
                 // 在此处执行 SSH 操作...                
+#pragma warning disable CS0168 // 声明了变量，但从未使用过
                 try
                 {
                     if (string.IsNullOrEmpty(path))
@@ -1337,6 +1340,7 @@ namespace MonitorAndControl
                     disk.Use = "0";
                     return disk;
                 }
+#pragma warning restore CS0168 // 声明了变量，但从未使用过
             }
         }
 
@@ -1476,59 +1480,70 @@ namespace MonitorAndControl
         /// <returns></returns>
         public string GetJoke()
         {
-
-            string resultstr = "";
-            //创建一个Web请求
-            HttpWebRequest request = WebRequest.Create("http://kr1.sickkle.com/joke") as HttpWebRequest;
-
-
-
-
-            // 获取Web服务器输出的数据
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            string RandomWords = "";
+            if (CmdPing("kr1.sickkle.com", 0).Trim() != "连接") {
+                RandomWords = "来自77的笑话" + "\r\n" + GetRandomWords();//取1.77数据库的笑话
+            }            
+            else
             {
-                // 取得输出流
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-                string a = reader.ReadToEnd();
+                //创建一个Web请求
+                HttpWebRequest request = WebRequest.Create("http://kr1.sickkle.com/joke") as HttpWebRequest;
+
+                // 获取Web服务器输出的数据
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    // 取得输出流
+                    StreamReader reader = new StreamReader(response.GetResponseStream());
+                    string a = reader.ReadToEnd();
+                    if (a == "")
+                    {
+                        RandomWords = "来自77的笑话" + "\r\n" + GetRandomWords();//取1.77数据库的笑话
+                    }
+                    else {
+                        RandomWords = a;
+                    }
+
+                    //JavaScriptSerializer js = new JavaScriptSerializer();   //实例化一个能够序列化数据的类
+
+                    // Joke list = js.Deserialize<Joke>(a);    //将json数据转化为对象类型并赋值给list
+                    // //string msg = list.msg;
+                    // string msg = "443eb1614f2f4188fe49e6127a3901";
+                    // string sign = list.sign;
+                    // string key = "5a75d5ec839a8f1ed686f0ddb67d5f09";
+                    // string iv = "f244ef6f0accec87";
+                    // byte[] msg1 = Convert.FromBase64String(msg);
+                    // byte[] key1 = System.Text.Encoding.Default.GetBytes(key);
+                    // byte[] iv1 = System.Text.Encoding.Default.GetBytes(iv);
+                    //byte[] iv1 = System.Text.Encoding.Default.GetBytes(iv);
+
+
+                    //string sign1 = DBConn.DBUtility.MD5Helper.md5(msg + iv);
+                    //if (sign1 == sign)
+                    //{
+                    //    string b = DBConn.DBUtility.AESEncrypt.DecryptAES256(msg,key,iv);
+                    //}
+                    //resultstr = msg;
+                    //return resultstr;
 
 
 
+                    //{ "msg":"efcf72a487f9855214d40286e7eef451399d8d0b4e8c10394bf508d1b83a4d4c1df069e769851d06edd2c54b094388e810b131f47c853807ef578bd097cc69ecc8fbd8e5b80c6095fa06030f47036fdb929e73c428f530b7751bc66d9eb99bc035a0006af81eb3d2e08774d549","sign":"dc3479ff294fbb89de0beeb38747636f"}
 
-                //JavaScriptSerializer js = new JavaScriptSerializer();   //实例化一个能够序列化数据的类
+                    //用这个 md5(msg+aes_iv)就能算出签名，和返回的sign比一比是不是一样
+                    //如果是一样，就用AES解密msg，就能得到原文了
+                    //AES256，密钥和向量刚发给你了，我再发一遍
+                    //aes_key = '5a75d5ec839a8f1ed686f0ddb67d5f09'
+                    //aes_iv = 'f244ef6f0accec87'
+                    //md5(Stoney)
+                    //向量是md5(Yves)的前16位
 
-                // Joke list = js.Deserialize<Joke>(a);    //将json数据转化为对象类型并赋值给list
-                // //string msg = list.msg;
-                // string msg = "443eb1614f2f4188fe49e6127a3901";
-                // string sign = list.sign;
-                // string key = "5a75d5ec839a8f1ed686f0ddb67d5f09";
-                // string iv = "f244ef6f0accec87";
-                // byte[] msg1 = Convert.FromBase64String(msg);
-                // byte[] key1 = System.Text.Encoding.Default.GetBytes(key);
-                // byte[] iv1 = System.Text.Encoding.Default.GetBytes(iv);
-                //byte[] iv1 = System.Text.Encoding.Default.GetBytes(iv);
-
-
-                //string sign1 = DBConn.DBUtility.MD5Helper.md5(msg + iv);
-                //if (sign1 == sign)
-                //{
-                //    string b = DBConn.DBUtility.AESEncrypt.DecryptAES256(msg,key,iv);
-                //}
-                //resultstr = msg;
-                //return resultstr;
-
-                return a;
-
-                //{ "msg":"efcf72a487f9855214d40286e7eef451399d8d0b4e8c10394bf508d1b83a4d4c1df069e769851d06edd2c54b094388e810b131f47c853807ef578bd097cc69ecc8fbd8e5b80c6095fa06030f47036fdb929e73c428f530b7751bc66d9eb99bc035a0006af81eb3d2e08774d549","sign":"dc3479ff294fbb89de0beeb38747636f"}
-
-                //用这个 md5(msg+aes_iv)就能算出签名，和返回的sign比一比是不是一样
-                //如果是一样，就用AES解密msg，就能得到原文了
-                //AES256，密钥和向量刚发给你了，我再发一遍
-                //aes_key = '5a75d5ec839a8f1ed686f0ddb67d5f09'
-                //aes_iv = 'f244ef6f0accec87'
-                //md5(Stoney)
-                //向量是md5(Yves)的前16位
-
+                }
+                
             }
+            return RandomWords;
+
+
+           
         }
 
 

@@ -32,9 +32,9 @@ namespace NPOI
         DataSet ds = new DataSet();
         private void Button5_Click(object sender, EventArgs e)
         {
-           
+
         }
-        
+
 
 
 
@@ -96,7 +96,7 @@ namespace NPOI
         }
         public class T_Style_Item
         {
-            public List <T_Style_Item_Option> T_Style_Item_Option;            
+            public List<T_Style_Item_Option> T_Style_Item_Option;
             public int Id;
             public string Style_No;
             public string Item_No;
@@ -137,7 +137,8 @@ namespace NPOI
                 string save_filename = dialog.FileName; //获得文件路径 
                                                         //举例子，写入一个二进制文件
                 BinaryWriter bw = new BinaryWriter(File.Create(save_filename));
-                bw.Write();
+                bw.Write(1);
+                
                 bw.Close();
                 MessageBox.Show("保存成功!");
             }
@@ -160,8 +161,8 @@ namespace NPOI
             Rootobject ItemOptionList = Helper.Json.JsonHelper.DeserializeJsonToObject<Rootobject>(Return_Message1.Return_Value);
             //DataSet ItemOptionList = Helper.Json.JsonHelper.DeserializeJsonToObject<DataSet>(Return_Message1.Return_Value);
 
-            
-            
+
+
 
             #region 选择保存Excel文件的目录
             System.Windows.Forms.SaveFileDialog SaveFileDialog1 = new SaveFileDialog();
@@ -206,37 +207,7 @@ namespace NPOI
         }
 
 
-        private int ToExcel(string savePath,)
-        {
-            // 创建一个 DataTable 对象来存储数据
-            DataTable dataTable = new DataTable("MyData");
-            // 添加列到 DataTable
-            dataTable.Columns.Add("Name", typeof(string));
-            dataTable.Columns.Add("Age", typeof(int));
-            // 向 DataTable 中添加数据行
-            dataTable.Rows.Add("John Doe", 30);
-            dataTable.Rows.Add("Jane Smith", 25);
-            // 使用 NPOI 组件导出 Excel 文件
-            IWorkbook workbook = new HSSFWorkbook();
-            ISheet worksheet = workbook.CreateSheet("MySheet");
-            int row = 0;
-            foreach (DataRow dataRow in dataTable.Rows)
-            {
-                IRow newRow = worksheet.CreateRow(row);
-                newRow.CreateCell(0).SetCellValue(dataRow["Name"].ToString());
-                newRow.CreateCell(1).SetCellValue(Convert.ToInt32(dataRow["Age"]));
-                row++;
-            }
-            // 将 Excel 文件保存到磁盘
-            string fileName = @"C:\temp\MyExcelFile.xls";
-            using (FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
-            {
-                workbook.Write(fs);
-            }
-            // 释放资源
-            workbook.Dispose();
-        }
-       
+
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();//首先根据打开文件对话框，选择要打开的文件
@@ -287,7 +258,7 @@ namespace NPOI
         {
             DataSet ds = new DataSet();
             ds.Tables.Clear();
-            
+
 
             OpenFileDialog ofd = new OpenFileDialog();//首先根据打开文件对话框，选择要打开的文件
             ofd.Filter = "Excel表格|*.xlsx|Excel97-2003表格|*.xls|所有文件|*.*";//打开文件对话框筛选器，默认显示文件类型
@@ -305,22 +276,7 @@ namespace NPOI
                     Helper.Excel.ExcelHelper excelHelper = new Helper.Excel.ExcelHelper(ofd.FileName);
                     ds = excelHelper.exceltoDataSet();
                     ds.Tables[0].Columns.Add(dc_OperationNo);
-                    OperationBLL ob = new OperationBLL();
-                    Int64 MaxOperationNo = ob.GetMaxOperationNo();
-                    for (int p = ds.Tables[0].Rows.Count - 1; p >= 0; p--)
-                    {
-                        string OperationNo = string.Format("{0:d10}", MaxOperationNo);
-                        ds.Tables[0].Rows[p]["OperationNo"] = "OP" + ds.Tables[0].Rows[p]["OperationType"].ToString().Trim() + OperationNo;
-                        if (ds.Tables[0].Rows[p][0] is DBNull)
-                            ds.Tables[0].Rows[p].Delete();
-                        else if (ds.Tables[0].Rows[p][0].ToString().Trim() == "")
-                            ds.Tables[0].Rows[p].Delete();
-                        MaxOperationNo = MaxOperationNo + 1;
-                    }
-                    ds.Tables[0].AcceptChanges();
-                    Grid_detail.DataSource = ds.Tables[0];
-                    Grid_detail.AllowUserToAddRows = false;
-                    Grid_detail.AllowUserToDeleteRows = false;
+
                 }
                 catch (Exception ex)
                 {
@@ -331,50 +287,32 @@ namespace NPOI
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (Styleno == "" || Combination_no == "")
-            {
-                return;
-            }
-            try
-            {
-                OperationBLL ob = new OperationBLL();
-                OplistNo = ob.NewOperationList(Convert.ToInt32(Combination_no), com_memo_no, Grid_detail);
 
-                if (OplistNo == 0)
+        }
+
+        private void buttonDownload_Click(object sender, EventArgs e)
+        {
+            //打开或创建工作簿
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            //获取Sheet1工作表
+            HSSFSheet sheet1 = (HSSFSheet)workbook.CreateSheet("Sheet1");
+            //写入数据
+            //设置样式
+            //保存工作簿到文件
+            using (FileStream file = new FileStream("test.xls", FileMode.Create))
+            {
+                OpenFileDialog ofd = new OpenFileDialog();//首先根据打开文件对话框，选择要打开的文件
+                ofd.Filter = "Excel表格|*.xlsx|Excel97-2003表格|*.xls|所有文件|*.*";//打开文件对话框筛选器，默认显示文件类型
+                string strPath;//定义文件路径
+                if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    MessageBox.Show("发生错误");
-
+                    try
+                    {
+                        strPath = ofd.FileName;
+                        workbook.Write(file);
+                    }
+                    catch { }
                 }
-                else
-                {
-                    string s_ToCaobo = ob.OperationToCaobo(OplistNo);
-                    string s_ToJingYuan = ob.OperationToJingYuan(OplistNo);
-                    if (s_ToCaobo == "1" && s_ToJingYuan == "1")
-                    {
-                        MessageBox.Show("完成");
-                        ds.Tables.Clear();
-
-                    }
-                    else if (s_ToCaobo == "1")
-                    {
-                        MessageBox.Show("推送至JingYuan错误：" + s_ToJingYuan);
-
-                    }
-                    else if (s_ToJingYuan == "1")
-                    {
-                        MessageBox.Show("推送至生产线PAD错误：" + s_ToCaobo);
-
-                    }
-                    else
-                    {
-                        MessageBox.Show("推送错误,请联系管理员：" + s_ToCaobo + " " + s_ToJingYuan);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);//捕捉异常    
-
             }
         }
     }

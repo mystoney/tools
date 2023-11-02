@@ -267,6 +267,7 @@ namespace email
                 return true;
             }
             MailMessage mailMessage = new MailMessage();
+#pragma warning disable CS0168 // 声明了变量，但从未使用过
             try
             {
                 mailMessage.From = new MailAddress(addr_from, name, Encoding.UTF8);
@@ -291,6 +292,7 @@ namespace email
                 SoftMailSendFailedCount++;
                 return false;
             }
+#pragma warning restore CS0168 // 声明了变量，但从未使用过
         }
     }
 }

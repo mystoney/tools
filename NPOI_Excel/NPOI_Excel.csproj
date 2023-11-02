@@ -59,16 +59,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExcelDAL.cs" />
+    <Compile Include="Excel测试.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Excel测试.Designer.cs">
+      <DependentUpon>Excel测试.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormNPOI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormNPOI.Designer.cs">
+      <DependentUpon>FormNPOI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NpoiExcelHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Excel测试.resx">
+      <DependentUpon>Excel测试.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormNPOI.resx">
+      <DependentUpon>FormNPOI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

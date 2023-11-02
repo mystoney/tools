@@ -43,11 +43,13 @@ namespace MonitorAndControl
             //dueTime：调用　callback 之前延迟的时间量（以毫秒为单位）。指定 Timeout.Infinite 以防止计时器开始计时。指定零 (0) 以立即启动计时器。
             //Period：调用　callback 的时间间隔（以毫秒为单位）。指定 Timeout.Infinite 可以禁用定期终止。
             ///////System.Threading.Timer threadTimer = new System.Threading.Timer(new System.Threading.TimerCallback(obj.Method3), null, 0, 100);
+#pragma warning disable CS0162 // 检测到无法访问的代码
             while (true)
             {
                 Console.WriteLine("test_" + Thread.CurrentThread.ManagedThreadId.ToString());
                 Thread.Sleep(100);
             }
+#pragma warning restore CS0162 // 检测到无法访问的代码
             Console.ReadLine();
         }
 

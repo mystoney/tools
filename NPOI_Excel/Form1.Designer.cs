@@ -53,6 +53,7 @@
             this.buttonDownload.TabIndex = 131;
             this.buttonDownload.Text = "下载模板";
             this.buttonDownload.UseVisualStyleBackColor = true;
+            this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click);
             // 
             // ButtonImport
             // 
@@ -117,7 +118,7 @@
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(211, 32);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
             // Form1
             // 

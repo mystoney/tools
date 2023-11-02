@@ -512,28 +512,21 @@ namespace MonitorAndControl
                     {///stoney a aaaaaaa
                         if (NoErr % 12 == 0)
                         {
-                            string RandomWords = "";
+                            
                             string Joke = wsm.GetJoke();//取66服务器上的笑话
-                            if (Joke == "")
-                            {
-                                RandomWords = "来自77的笑话" + "\r\n" + wsm.GetRandomWords();//取1.77数据库的笑话
-                            }
-                            else
-                            {
-                                RandomWords = "来自66的笑话" + "\r\n" + Joke.Trim();
-                            }
+
 
 
 
                             new WeCom().SendToWeCom(
-                                                RandomWords,
+                                                Joke,
                                                 "wwed1606c46cbfc117"
                                                 , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
                                                 "1000002", "2"
                                                 );
                             Console.Write("\r\n");
                             //Console.Write(new WeCom().SendToWeCom(
-                            //                    RandomWords,
+                            //                    Joke,
                             //                    "wwed1606c46cbfc117"
                             //                    , "dznOh-xxQax7KI_Pc_ffI_C1WRthahI7CgNPkhpykc0",
                             //                    "1000002", "3"

@@ -48,6 +48,7 @@ namespace MonitorAndControl
             this.加密ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.访问linuxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getJokeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nPOIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.ToolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.Label1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -56,7 +57,6 @@ namespace MonitorAndControl
             this.DGMAIN = new MyContrals.ExDataGridView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.nPOIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -208,6 +208,13 @@ namespace MonitorAndControl
             this.getJokeToolStripMenuItem.Text = "GetJoke()";
             this.getJokeToolStripMenuItem.Click += new System.EventHandler(this.getJokeToolStripMenuItem_Click);
             // 
+            // nPOIToolStripMenuItem
+            // 
+            this.nPOIToolStripMenuItem.Name = "nPOIToolStripMenuItem";
+            this.nPOIToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.nPOIToolStripMenuItem.Text = "NPOI";
+            this.nPOIToolStripMenuItem.Click += new System.EventHandler(this.nPOIToolStripMenuItem_Click);
+            // 
             // StatusStrip
             // 
             this.StatusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -287,13 +294,6 @@ namespace MonitorAndControl
             this.notifyIcon1.Text = "notifyIcon1";
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
-            // 
-            // nPOIToolStripMenuItem
-            // 
-            this.nPOIToolStripMenuItem.Name = "nPOIToolStripMenuItem";
-            this.nPOIToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.nPOIToolStripMenuItem.Text = "NPOI";
-            this.nPOIToolStripMenuItem.Click += new System.EventHandler(this.nPOIToolStripMenuItem_Click);
             // 
             // Main
             // 
